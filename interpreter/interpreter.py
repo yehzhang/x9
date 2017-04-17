@@ -1,5 +1,5 @@
-from .parser import InstructionParser
-from itertools import chain
+from .parser import Nano
+from .environment import Envrionment
 
 
 class Interpreter:
@@ -42,13 +42,7 @@ class Interpreter:
         self.env = Envrionment(regs_mapping, config['mem_size'])
 
         # Load instructions
-        with open(filename) as fin:
-            text = fin.read()
-        self.insts, labels = InstructionParser.parse(text)
-
-        # Mount instructions
-        for inst in chain(self.insts, labels):
-            inst.will_mount(self.insts, labels)
+        self.insts = Nano.parse(filename, self.env)
 
         return self
 
@@ -56,6 +50,6 @@ class Interpreter:
         # Execute instructions
         for inst in self.insts:
             inst.execute()
-            self.env.pc += 1
+            self.env.registers.pc += 1
 
         print(self.env)
