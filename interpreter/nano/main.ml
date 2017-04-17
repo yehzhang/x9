@@ -23,5 +23,5 @@ let read_file filename =
 
 let _ =
   try
-    Printf.printf "%s\n" (string_to_program Sys.argv.(1))
+    Printf.printf "%s\n" (translate Sys.argv.(1))
   with _ -> ()

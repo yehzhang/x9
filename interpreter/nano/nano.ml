@@ -23,5 +23,12 @@ let statement_to_string s =
     let arg_strs = List.map operand_to_string os in
       String.concat " " (m :: arg_strs)
 
-
-let program_to_string ss = String.concat "\n" (List.map statement_to_string ss)
+let program_to_string stmts =
+  let rec stmt_formatter i ss =
+    match ss with
+    | s :: ss' ->
+      let line = Printf.sprintf "%d %s" i (statement_to_string s) in
+        line :: stmt_formatter (i + 1) ss'
+    | _        -> []
+  in
+    String.concat "\n" (stmt_formatter 0 stmts)

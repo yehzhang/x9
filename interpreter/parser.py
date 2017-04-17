@@ -1,49 +1,42 @@
+import os
 import re
-from .instructions import RegisterInstructionFabric, Executable
+from tempfile import TemporaryFile
+from subprocess import Popen, PIPE
+from .statement import RegisterStatementFabric, Instruction
 
-class InstructionParser:
-    MNEMONIC_PATTERN = re.compile(r'\s*(\w+)\s*(.*)')
-    ARGS_PATTERN = re.compile(r'\s*,\s*')
-    REGS_MAPPING = {
-        '$0': 0,
-        '$1': 1,
-        '$2': 2,
-        '$3': 3
-    }
+
+class Nano:
 
     @classmethod
-    def parse(cls, text):
+    def parse(cls, filename, env):
         """
-        :return Tuple[List[Executable], List[Label]]:
+        :return Tuple[List[Instruction], List[Label]]:
         """
-        execs = []
-        lables = []
+        this_dir = os.path.dirname(__file__)
+        nano_dir = os.path.join(this_dir, './nano')
+        cls.popen(['make', '-C', nano_dir], 'Failed to compile parser')
 
-        for i, ln in enumerate(text.split()):
-            matched = cls.MNEMONIC_PATTERN.match(ln)
-            if matched is None:
-                raise SyntaxError('Invalid instruction: {}'.format(type(ln)))
-            name, args_str = matched.group(1, 2)
+        translator_path = os.path.join(nano_dir, 'translator')
+        text = cls.popen([translator_path, filename], 'Failed to parse')
 
-            inst_cls = RegisterInstructionFabric.get(name)
+        insts = []
+        for ln in text.splitlines():
+            words = ln.split()
+            inst_id, mnemonic = words[:2]
+            args = words[2:]
 
-            arg_strs = cls.ARGS_PATTERN.split(args_str)
-            args = []
-            for arg in arg_strs:
-                i_reg = cls.REGS_MAPPING.get(arg)
-                if i_reg is None:
-                    # TODO handle immediate if number else syntax error
-                    raise NotImplementedError
-                args.append(i_reg)
+            cls = RegisterStatementFabric.get(mnemonic)
+            stmt = cls(inst_id, env, *args)
 
-            inst = inst_cls(*args)
+            insts.append(stmt)
+        return insts
 
-            dest = execs if isinstance(inst, Executable) else labels
-            dest.append(inst)
-
-        return execs, labels
-
-class InstructionParser:
-
-    def __init__(self):
-        pass
+    @classmethod
+    def popen(cls, args, err_msg):
+        with Popen(args, stdout=PIPE, stderr=PIPE) as proc:
+            proc.wait()
+            stdout = proc.stdout.read().decode()
+            if proc.returncode != 0:
+                stderr = proc.stderr.read().decode()
+                raise RuntimeError('{}: \n{}\n{}'.format(err_msg, stdout, stderr))
+        return stdout
