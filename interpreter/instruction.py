@@ -22,14 +22,11 @@ class Instruction(metaclass=RegisterInstructionFabric):
         self.num_ln = line_number
         self.env = env
 
-    def will_mount(self, env, insts, labels):
+    def will_mount(self, insts, labels):
         """ Called before running.
             Note that not all instructions are mounted at this time.
         """
         pass
-
-    def read_register(self, i):
-        return self.env.registers[i]
 
 
 class Label(Instruction):
@@ -55,18 +52,5 @@ class Executable(Instruction):
         raise NotImplementedError
 
     def as_byte_code(self):
-        raise NotImplementedError
-
-
-class Add(Executable):
-    mnemonic = 'add'
-
-    def execute(self):
-        self.env.accumulator += self.read_register(self.rs)
-
-
-class ShiftRight(Executable):
-    mnemonic = 'shr'
-
-    def execute(self):
+        """ May be required in PA4? """
         raise NotImplementedError

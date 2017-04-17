@@ -4,13 +4,30 @@ from itertools import chain
 
 class Interpreter:
     DEFAULT_CONFIG = {
-        'num_regs': 8,
+        'regs_mapping': {
+            'r0': 0,
+            'r1': 1,
+            'r2': 2,
+            'r3': 3,
+            'r4': 4,
+            'r5': 5,
+            'r6': 6,
+            'r7': 7,
+            'r8': 8,
+            'r9': 9,
+            'r10': 10,
+            'r11': 11,
+            'r12': 12,
+            'at': 13,
+            'pc': 14,
+            'acc': 15,
+        },
         'mem_size': 256,
     }
 
-    def __init__(self, config):
+    def __init__(self, config=None):
         new_config = dict(self.DEFAULT_CONFIG)
-        new_config.update(config)
+        new_config.update(config or {})
         self.config = new_config
 
         self.env = None
@@ -20,7 +37,9 @@ class Interpreter:
         config = config or self.config
 
         # Create environment
-        self.env = Envrionment(config['num_regs'], config['mem_size'])
+        regs_mapping = config['regs_mapping']
+        assert len(regs_mapping) <= 16
+        self.env = Envrionment(regs_mapping, config['mem_size'])
 
         # Load instructions
         with open(filename) as fin:
@@ -31,28 +50,12 @@ class Interpreter:
         for inst in chain(self.insts, labels):
             inst.will_mount(self.insts, labels)
 
+        return self
+
     def run(self):
         # Execute instructions
         for inst in self.insts:
             inst.execute()
-            # TODO Does $pc += 4 after being modified by this instruction?
-            self.env.program_counter += 1
+            self.env.pc += 1
 
-        print('registers: {}'.format(', '.format(self.registers)))
-
-
-class Envrionment:
-
-    def __init__(self, num_regs, mem_size):
-        self.memory = [0xff] * mem_size
-
-        self.registers = [0xff] * num_regs
-        self.i_accumulator = 0
-
-        self.program_counter = 0
-
-        self.labels = {}
-
-    @property
-    def accumulator(self):
-        return self.registers[self.i_accumulator]
+        print(self.env)
