@@ -128,3 +128,7 @@ nanoParse.*
 nanoml.byte
 nanoml.top
 *.ml.backup
+
+nano/.*
+
+interpreter/nano/translator
