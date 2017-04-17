@@ -93,3 +93,38 @@ ENV/
 .idea/
 
 sftp-config.json
+
+
+
+
+
+# OCaml
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+
+# ocamlbuild working directory
+_build/
+
+# ocamlbuild targets
+*.byte
+*.native
+
+# oasis generated files
+setup.data
+setup.log
+
+# lexer and parser
+nanoLex.*
+!nanoLex.mll
+nanoParse.*
+!nanoParse.mly
+nanoml.byte
+nanoml.top
+*.ml.backup
