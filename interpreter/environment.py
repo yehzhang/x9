@@ -1,8 +1,8 @@
 class Envrionment:
 
-    def __init__(self, regs_mapping, mem_size):
-        self.registers = Registers(regs_mapping, self)
-        self.memory = [0] * mem_size
+    def __init__(self, config):
+        self.registers = Registers(self, config)
+        self.memory = [config['mem_default_value']] * config['mem_size']
         self.labels = {}
 
     def __str__(self):
@@ -10,12 +10,14 @@ class Envrionment:
 
 
 class Registers:
-    MAX_VALUE = 0xff
 
-    def __init__(self, regs_mapping, env):
-        super().__setattr__('mapping', regs_mapping)
-        super().__setattr__('registers', [0] * len(regs_mapping))
+    def __init__(self, env, config):
+        reg_mapping = config['reg_mapping']
+        super().__setattr__('mapping', reg_mapping)
+        regs = [config['reg_default_value']] * len(reg_mapping)
+        super().__setattr__('registers', regs)
         super().__setattr__('env', env)
+        super().__setattr__('max_val', config['reg_max_value'])
 
     def __str__(self):
         rev_mapping = {v: k for k, v in self.mapping.items()}
@@ -28,7 +30,7 @@ class Registers:
         return self.registers[i_reg]
 
     def __setattr__(self, reg_name, value):
-        value &= self.MAX_VALUE
+        value &= self.max_val
         i_reg = self.get_index(reg_name)
         self.registers[i_reg] = value
 

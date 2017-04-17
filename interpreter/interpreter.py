@@ -4,7 +4,7 @@ from .environment import Envrionment
 
 class Interpreter:
     DEFAULT_CONFIG = {
-        'regs_mapping': {
+        'reg_mapping': {
             'r0': 0,
             'r1': 1,
             'r2': 2,
@@ -22,7 +22,10 @@ class Interpreter:
             'pc': 14,
             'acc': 15,
         },
+        'reg_max_value': 0xff,
+        'reg_default_value': 0,
         'mem_size': 256,
+        'mem_default_value': 0,
     }
 
     def __init__(self, config=None):
@@ -37,9 +40,8 @@ class Interpreter:
         config = config or self.config
 
         # Create environment
-        regs_mapping = config['regs_mapping']
-        assert len(regs_mapping) <= 16
-        self.env = Envrionment(regs_mapping, config['mem_size'])
+        assert len(config['reg_mapping']) <= 16
+        self.env = Envrionment(config)
 
         # Load instructions
         self.insts = Nano.parse(filename, self.env)
