@@ -14,13 +14,13 @@ class Interpreter:
             'r6': 6,
             'r7': 7,
             'r8': 8,
-            'r9': 9,
-            'r10': 10,
-            'r11': 11,
-            'r12': 12,
-            'at': 13,
+            't0': 9,
+            't1': 10,
+            't2': 11,
+            't3': 12,
+            'at': 13,  # assembler temporary
             'pc': 14,
-            'acc': 15,
+            'ac': 15,  # accumulator
         },
         'reg_max_value': 0xff,
         'reg_default_value': 0,
@@ -50,8 +50,9 @@ class Interpreter:
 
     def run(self):
         # Execute instructions
-        for inst in self.insts:
+        while not self.env.should_exit:
+            inst = self.insts[self.env.registers.pc]
             inst.execute()
-            self.env.registers.pc += 1
+            self.env.tick()
 
         print(self.env)

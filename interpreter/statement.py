@@ -12,8 +12,8 @@ class RegisterStatementFabric(type):
         return cls
 
     @classmethod
-    def get(cls, ref_name):
-        return cls.insts[ref_name]
+    def get(mcs, ref_name):
+        return mcs.insts[ref_name]
 
 
 class Statement(metaclass=RegisterStatementFabric):
@@ -22,9 +22,6 @@ class Statement(metaclass=RegisterStatementFabric):
     def __init__(self, instruction_id, env):
         self.instruction_id = instruction_id
         self.env = env
-
-    def execute(self):
-        raise NotImplementedError
 
 
 class Label(Statement):
@@ -35,17 +32,17 @@ class Label(Statement):
         self.name = name
         env.labels[name] = self
 
-    def execute(self):
-        pass
-
 
 class Instruction(Statement):
     mnemonic = None
 
-    def __init__(self, instruction_id, env, rs, rt=None):
+    def __init__(self, instruction_id, env, operand1, operand2=None):
         super().__init__(instruction_id, env)
-        self.rs = rs
-        self.rt = rt
+        self.operand1 = operand1
+        self.operand2 = operand2
+
+    def execute(self):
+        raise NotImplementedError
 
     def as_byte_code(self):
         """ May be required in PA4? """
