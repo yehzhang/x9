@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
 int bytes_match(uint8_t *string, size_t length, uint8_t pattern) {
     if (pattern > 0b1111) {
         printf("Pattern is too large.\n");
@@ -21,7 +17,9 @@ int bytes_match(uint8_t *string, size_t length, uint8_t pattern) {
         slice = ((slice << 1) & 0b1111) | bit;
         // printf("byte: 0x%02x, bit: %d, slice: 0x%02x, hit: %d\n", byte, bit, slice, slice == pattern);
         if (slice == pattern) {
-            count++;
+            if (slice < 255) {
+                count++;
+            }
         }
     }
 
@@ -37,3 +35,9 @@ int main()
     printf("bytes_match: %d, should_be: %d\n", count, 5);
     return 0;
 }
+
+# bytes_match:
+    set 0
+
+    add r0, ac
+
