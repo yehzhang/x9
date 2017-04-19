@@ -5,7 +5,7 @@ class Add(Instruction):
     mnemonic = 'add'
 
     def execute(self):
-        self.env.registers.acc += self.env.registers[self.operand1]
+        self.env.registers.ac += self.env.registers[self.operand1]
 
 
 class ShiftRight(Instruction):

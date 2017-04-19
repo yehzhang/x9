@@ -30,7 +30,6 @@ class Label(Statement):
     def __init__(self, instruction_id, env, name):
         super().__init__(instruction_id, env)
         self.name = name
-        env.labels[name] = self
 
 
 class Instruction(Statement):
