@@ -1,11 +1,11 @@
 # set 23
 entry:
-    add r0, r1
-    add r2, r3 # line 1
+    add pc, r0
+    add pc, r3 # line 1
 
 body:
-    add r4, r5
+    add ac, r5
 
 exit:
-    add r4, r1
-    add r5, r2
+    add ac, r1
+    add ac, r2

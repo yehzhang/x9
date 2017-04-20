@@ -51,13 +51,12 @@ class Interpreter:
         while True:
             if self.env.should_exit:
                 break
-
-            next_pc = self.env.fetch_maybe_updated_pc() + 1
             if next_pc >= len(self.insts):
                 break
-            self.env.registers.pc = next_pc
 
             inst = self.insts[self.env.registers.pc]
             inst.execute()
+
+            self.env.registers.pc += 1
 
         print(self.env)
