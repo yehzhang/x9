@@ -21,3 +21,10 @@ class Jump(Instruction):
     def jump(self, label_name):
         label = self.env.labels[label_name]
         self.env.registers.pc = label.instruction_id
+
+
+class Nop(Instruction):
+    mnemonic = '__nop'
+
+    def execute(self):
+        pass

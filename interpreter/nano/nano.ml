@@ -24,7 +24,9 @@ let localize stmts =
         (curr_i, s) :: localize' (curr_i + 1) ss
     | _       -> []
   in
-    localize' 0 stmts
+  (* Padding for the potential label before the first instruction *)
+  let init_inst_loc = 0, Instruction("__nop", []) in
+    init_inst_loc :: localize' 1 stmts
 
 
 let operand_to_string op =

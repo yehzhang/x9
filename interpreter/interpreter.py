@@ -21,7 +21,6 @@ class Interpreter:
             't2',
             't3',
         ],
-        'reg_max_value': 0xff,
         'reg_default_value': 0,
         'mem_size': 256,
         'mem_default_value': 0,
@@ -48,10 +47,13 @@ class Interpreter:
         if self.insts is None:
             raise RuntimeError('Assembly file is not loaded')
 
+        # Skip the first nop instruction
+        self.env.registers.pc = 1
+
         while True:
             if self.env.should_exit:
                 break
-            if next_pc >= len(self.insts):
+            if self.env.registers.pc >= len(self.insts):
                 break
 
             inst = self.insts[self.env.registers.pc]

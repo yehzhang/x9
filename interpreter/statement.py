@@ -35,7 +35,7 @@ class Label(Statement):
 class Instruction(Statement):
     mnemonic = None
 
-    def __init__(self, instruction_id, env, operand1, operand2=None):
+    def __init__(self, instruction_id, env, operand1=None, operand2=None):
         super().__init__(instruction_id, env)
         self.operand1 = operand1
         self.operand2 = operand2

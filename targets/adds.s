@@ -1,7 +1,7 @@
 # set 23
 entry:
     add pc, r0
-    add pc, r3 # line 1
+    add r2, r3 # line 1
 
 body:
     add ac, r5
