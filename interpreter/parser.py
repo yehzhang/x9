@@ -3,6 +3,7 @@ import re
 from tempfile import TemporaryFile
 from subprocess import Popen, PIPE
 from .statement import RegisterStatementFabric, Instruction
+from .instructions import *
 
 
 class Nano:
