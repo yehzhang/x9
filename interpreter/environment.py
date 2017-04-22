@@ -4,26 +4,21 @@ class Envrionment:
         self.registers = Registers(config)
         self.memory = Memory(config)
         self.labels = {}
-        self.should_exit = False
 
     def __str__(self):
         return str(self.registers)
-
-    def exit(self):
-        """ Called by instruction to exit """
-        self.should_exit = True
 
 
 class Registers:
 
     def __init__(self, config):
         assert len(config['reg_names']) <= 16
-        assert 0 <= config['reg_default_value'] <= 0xff
+        assert 0 <= config['reg_default'] <= 0xff
 
         super().__setattr__('names', config['reg_names'])
-        registers = {k: Byte().set(config['reg_default_value'])
-                     for k in config['reg_names']}
-        super().__setattr__('registers', registers)
+
+        registers = make_bytes(config['reg_default'], len(self.names))
+        super().__setattr__('registers', dict(zip(self.names, registers)))
 
     def __str__(self):
         regs_str = '\n'.join('\t{}: {}'.format(n, str(self.registers[n]))
@@ -47,11 +42,10 @@ class Memory:
     """
 
     def __init__(self, config):
-        assert 0 <= config['mem_default_value'] <= 0xff
+        assert 0 <= config['mem_default'] <= 0xff
         assert 0 < config['mem_size']
 
-        self.memory = [Byte().set(config['mem_default_value'])
-                       for _ in range(config['mem_size'])]
+        self.memory = make_bytes(config['mem_default'], config['mem_size'])
 
     def __str__(self):
         return '\n'.join(' '.join(map(str, self.memory[i:i+8]))
@@ -132,3 +126,20 @@ def convert_to_unsigned_integer(value, size):
         raise ValueError(msg)
     all_f_mask = max_value - 1
     return value & all_f_mask
+
+
+def make_bytes(default, size=None):
+    """
+    :param int|List[int] default:
+    :param int size: number of bytes in the list, if default is int
+    :return List[Byte]:
+    """
+    if isinstance(default, int):
+        if size is None:
+            raise ValueError("'size' is not specified when default is int")
+        return [Byte().set(default) for _ in range(size)]
+
+    bytes = [Byte().set(d) for d in default]
+    if size is not None and len(bytes) != size:
+        raise ValueError("'default' and 'size' are not of the same length")
+    return bytes

@@ -21,9 +21,9 @@ class Interpreter:
             't2',
             't3',
         ],
-        'reg_default_value': 0,
+        'reg_default': 0,
         'mem_size': 256,
-        'mem_default_value': 0,
+        'mem_default': 0,
     }
 
     def __init__(self, config=None):
@@ -51,8 +51,6 @@ class Interpreter:
         self.env.registers.pc = 1
 
         while True:
-            if self.env.should_exit:
-                break
             if self.env.registers.pc >= len(self.insts):
                 break
 

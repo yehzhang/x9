@@ -9,7 +9,7 @@ def test_answer():
     from interpreter.environment import Memory
 
     mem = Memory({
-        'mem_default_value': 0,
+        'mem_default': 0,
         'mem_size': 64,
     })
 
