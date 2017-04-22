@@ -1,11 +1,7 @@
 import pytest
-import sys
-import os
 
 
 def test_answer():
-    sys.path.append(os.path.abspath(os.path.join(
-        os.path.dirname(__file__), os.path.pardir)))
     from interpreter.environment import Memory
 
     mem = Memory({
