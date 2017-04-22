@@ -3,6 +3,7 @@ exception MLFailure of string
 type operand =
   | Imm of int
   | Reg of string
+  | LabelRef of string
 
 type statement =
   | Label of string
@@ -31,8 +32,9 @@ let localize stmts =
 
 let operand_to_string op =
   match op with
-  | Imm i -> string_of_int i
-  | Reg n -> n
+  | Imm      i -> string_of_int i
+  | Reg      n -> n
+  | LabelRef n -> n
 
 let program_to_string stmts =
   let rec format_and_partition locs labels insts =

@@ -25,7 +25,7 @@ statement_list:
   | statement                             { [$1] }
 
 statement:
-  | Id COLON                              { Label $1 }
+  | label_decl                            { Label $1 }
   /* Instruction contains at least one argument */
   | Id operand_list                       { Instruction ($1, $2) }
 
@@ -36,3 +36,7 @@ operand_list:
 operand:
   | Num                                   { Imm $1 }
   | Id                                    { Reg $1 }
+  | label_decl                            { LabelRef $1 }
+
+label_decl:
+  | Id COLON                              { $1 }
