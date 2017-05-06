@@ -74,7 +74,7 @@ for_entry:
         set 7
         sub r1 # 7 - i % 8
         mov r0 byte
-        srl r1 # byte >> (7 - i % 8)
+        sra r1 # byte >> (7 - i % 8)
         set 1
         and bit
 
