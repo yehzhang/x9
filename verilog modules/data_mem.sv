@@ -2,29 +2,29 @@
 // Design Name:
 // Module Name:    DataRAM
 //
-module data_mem(
-  input              CLK,
-  input [7:0]        DataAddress,
-  input              ReadMem,
-  input              WriteMem,
-  input [7:0]       DataIn,
-  output logic[7:0] DataOut);
+module data_mem #(parameter SIZE=256)(
+  input             clk,
+  input [7:0]       addr,
+  input             ctrl_mem_read,
+  input             ctrl_mem_write,
+  input [7:0]       data_in,
+  output logic[7:0] data_out);
 
-  logic [7:0] my_memory [256];
+  logic [7:0] my_memory [SIZE];
 
-//  initial 
+//  initial
 //    $readmemh("dataram_init.list", my_memory);
   always_comb
-    if(ReadMem) begin
-      DataOut = my_memory[DataAddress];
-	  $display("Memory read M[%d] = %d",DataAddress,DataOut);
-    end else 
-      DataOut = 16'bZ;
+    if(ctrl_mem_read) begin
+      data_out = my_memory[addr];
+	  // $display("Memory read M[%d] = %d",addr,data_out);
+    end else
+      data_out = 16'bZ;
 
-  always_ff @ (posedge CLK)
-    if(WriteMem) begin
-      my_memory[DataAddress] = DataIn;
-	  $display("Memory write M[%d] = %d",DataAddress,DataIn);
+  always_ff @ (posedge clk)
+    if(ctrl_mem_write) begin
+      my_memory[addr] = data_in;
+	  // $display("Memory write M[%d] = %d",addr,data_in);
     end
 
 endmodule
