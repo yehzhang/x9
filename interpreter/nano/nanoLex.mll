@@ -14,6 +14,7 @@ rule token = parse
 
   | ":"                           { COLON }
   | ","                           { COMMA }
+  | "="                           { EQUAL }
 
   | digit+ as l                   { Num (int_of_string l) }
   | letter alnum* as l            { Id l }

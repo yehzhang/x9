@@ -18,31 +18,70 @@ class RegisterStatementFabric(type):
 
 class Statement(metaclass=RegisterStatementFabric):
     mnemonic = None
+    type_name = 'statement'
 
-    def __init__(self, instruction_id, env):
-        self.instruction_id = instruction_id
+    def __init__(self, instruction_id, env, operands):
+        self.instruction_id = int(instruction_id)
         self.env = env
+        self._init_attrs(operands)
+
+    def _init_attrs(self):
+        raise NotImplementedError
+
+    def as_assembly_code(self):
+        raise NotImplementedError
+
+    def __repr__(self):
+        return '<{} {}>'.format(self.mnemonic, self.type_name)
+
+    __str__ = as_assembly_code
 
 
 class Label(Statement):
-    mnemonic = '__label'
+    mnemonic = 'label'
 
-    def __init__(self, instruction_id, env, name):
-        super().__init__(instruction_id, env)
-        self.name = name
+    def _init_attrs(self, operands):
+        self.name, = operands
 
 
 class Instruction(Statement):
-    mnemonic = None
+    type_name = 'instruction'
 
-    def __init__(self, instruction_id, env, operand1=None, operand2=None):
-        super().__init__(instruction_id, env)
-        self.operand1 = operand1
-        self.operand2 = operand2
-
-    def execute(self):
+    def _execute(self):
         raise NotImplementedError
 
     def as_byte_code(self):
         """ May be required in PA4? """
         raise NotImplementedError
+
+    def execute(self):
+        self.env.execution_count += 1
+        self._execute()
+
+
+class RType(Instruction):
+
+    def _init_attrs(self, operands):
+        if len(operands) != 2:
+            raise ValueError('Invalid number of operands')
+        if any(op not in self.env.registers.names for op in operands):
+            raise ValueError("Register not found in the environment")
+        self.operand1, self.operand2 = operands
+
+    @property
+    def reg1(self):
+        return self.registers[self.operand1]
+
+    @property
+    def reg2(self):
+        return self.registers[self.operand2]
+
+    @property
+    def regs(self):
+        return self.env.registers
+
+
+class IType(Instruction):
+
+    def _init_attrs(self, operands):
+        self.immediate = int(immediate, 0)

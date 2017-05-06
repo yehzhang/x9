@@ -7,6 +7,7 @@ open Nano
 %token <string> Id
 %token COLON
 %token COMMA
+%token EQUAL
 
 %start program
 %type <Nano.program> program
@@ -14,7 +15,26 @@ open Nano
 %%
 
 program:
-  | maybe_statement_list                  { $1 }
+  | maybe_section_list { $1, $2 }
+
+maybe_section_list:
+  |                                       { [] }
+  | section_list                          { $1 }
+
+section_list:
+  | maybe_alias_list section_list         { AliasSection $1 :: $2 }
+  | maybe_statement_list                  { [StatementSection $1] }
+
+maybe_alias_list:
+  |                                       { [] }
+  | alias_list                            { $1 }
+
+alias_list:
+  | alias alias_list                      { $1 :: $2 }
+  | alias                                 { [$1] }
+
+alias:
+  | Id EQUAL operand                      { Alias ($1, $3) }
 
 maybe_statement_list:
   |                                       { [] }
@@ -25,7 +45,7 @@ statement_list:
   | statement                             { [$1] }
 
 statement:
-  | label_decl                            { Label $1 }
+  | label_symbol                          { Label $1 }
   /* Instruction contains at least one argument */
   | Id operand_list                       { Instruction ($1, $2) }
 
@@ -36,7 +56,7 @@ operand_list:
 operand:
   | Num                                   { Imm $1 }
   | Id                                    { Reg $1 }
-  | label_decl                            { LabelRef $1 }
+  | label_symbol                          { LabelRef $1 }
 
-label_decl:
+label_symbol:
   | Id COLON                              { $1 }

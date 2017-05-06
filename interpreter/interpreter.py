@@ -31,12 +31,16 @@ class Interpreter:
         new_config.update(config or {})
         self.config = new_config
 
+        # Ensure pc and ac exist in the names
+        if not set(['pc', 'ac']) <= set(self.config.names):
+            raise ValueError("'pc' and 'ac' do not exist in 'reg_names'")
+
         self.env = None
         self.insts = None
 
     def load(self, filename):
         self.env = Envrionment(self.config)
-        labels, self.insts = Nano.parse(filename, self.env)
+        labels, self.insts = Nano(filename, self.env).parse()
         # Add references to labels
         for label in labels:
             self.env.labels[label.name] = label

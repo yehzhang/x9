@@ -9,35 +9,40 @@ from .instructions import *
 class Nano:
     TARGET_NAME = 'translator'
 
-    @classmethod
-    def parse(cls, filename, env):
+    def __init__(self, filename, env):
+        self.filename = filename
+        self.env = env
+
+    def parse(self):
         """
         :return Tuple[List[Instruction], List[Label]]:
         """
+        text = self.load_text()
 
-        text = cls.load_text(filename)
-        sections = text.split('\n\n')
+        aliases = []
+        labels = []
+        insts = []
+        i = 0
+        for ln in text.splitlines():
+            words = ln.split()
+            inst_id, mnemonic = words[:2]
+            args = words[2:]
 
-        insts_sections = []
-        for section in sections:
-            insts = []
-            for ln in section.splitlines():
-                words = ln.split()
-                inst_id, mnemonic = words[:2]
-                args = words[2:]
+            cls = RegisterStatementFabric.get(mnemonic)
+            try:
+                stmt = cls(inst_id, self.env, args)
+            except Exception:
+                raise ValueError("Invalid statement: '{}'".format(ln))
 
-                cls = RegisterStatementFabric.get(mnemonic)
-                inst_id = int(inst_id)
-                stmt = cls(inst_id, env, *args)
+            stmts.append(stmt)
 
-                insts.append(stmt)
-
-            insts_sections.append(insts)
 
         return insts_sections
 
-    @classmethod
-    def load_text(cls, filename):
+    def load_sections(self):
+        pass
+
+    def load_text(self):
         def popen(args, err_msg):
             with Popen(args, stdout=PIPE, stderr=PIPE) as proc:
                 proc.wait()
@@ -51,8 +56,8 @@ class Nano:
         nano_dir = os.path.join(this_dir, './nano')
         popen(['make', '-C', nano_dir], 'Failed to compile parser')
 
-        translator_path = os.path.join(nano_dir, cls.TARGET_NAME)
-        text = popen([translator_path, filename], 'Failed to parse')
+        translator_path = os.path.join(nano_dir, self.TARGET_NAME)
+        text = popen([translator_path, self.filename], 'Failed to parse')
         if text.startswith('Error: '):
             raise RuntimeError(text)
         return text
