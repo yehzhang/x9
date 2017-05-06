@@ -77,7 +77,7 @@ for_entry:
         nop
         # TODO Better have a set instruction
         addi count, count, 1
-inc_count_footer:
+    inc_count_footer:
 
         # if (count >= 255) break;
         # Saturated
@@ -90,3 +90,4 @@ inc_count_footer:
 for_exit:
 
 return:
+    add $v0, count, $zero
