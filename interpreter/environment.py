@@ -4,9 +4,13 @@ class Envrionment:
         self.registers = Registers(config)
         self.memory = Memory(config)
         self.labels = {}
+        self.execution_count = 0
 
     def __str__(self):
-        return str(self.registers)
+        return '\n'.join([
+            'Registers: \n{}'.format(self.registers.as_str(1)),
+            'Dynamic instruction count: {}'.format(self.execution_count)
+        ])
 
 
 class Registers:
@@ -21,9 +25,11 @@ class Registers:
         super().__setattr__('registers', dict(zip(self.names, registers)))
 
     def __str__(self):
-        regs_str = '\n'.join('\t{}: {}'.format(n, str(self.registers[n]))
-                             for n in self.names)
-        return 'registers: \n{}'.format(regs_str)
+        return self.as_str(0)
+
+    def as_str(self, indent):
+        return '\n'.join('{}{}: {}'.format(
+            '\t' * indent, n, str(self.registers[n])) for n in self.names)
 
     def __getattr__(self, name):
         return self.registers[name].get()
@@ -31,10 +37,7 @@ class Registers:
     def __setattr__(self, name, value):
         self.registers[name].set(value)
 
-    def __getitem__(self, key):
-        if isinstance(key, int):
-            key = self.names[key]
-        return self.__getattr__(key)
+    __getitem__ = __getattr__
 
 
 class Memory:
@@ -48,7 +51,7 @@ class Memory:
         self.memory = make_bytes(config['mem_default'], config['mem_size'])
 
     def __str__(self):
-        return '\n'.join(' '.join(map(str, self.memory[i:i+8]))
+        return '\n'.join(' '.join(map(str, self.memory[i:i + 8]))
                          for i in range(0, len(self.memory), 8))
 
     def __getitem__(self, key):
