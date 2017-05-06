@@ -31,8 +31,8 @@ module ALU(
         kAdd:  {cout, out} = a + b;
         kAddC: {cout, out} = a + b + cin;
         kSub:  out = a - b;
-        kSll:  out = a >> b;
-        kSra:  out = a >>> b;
+        kSll:  out = a << b;
+        kSra:  out = a >> b;
         kAnd:  out = a & b;
         kOr:   out = a | b;
         kNeg:  out = ~a;
