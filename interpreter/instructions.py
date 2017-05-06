@@ -1,30 +1,36 @@
-from .statement import Instruction
+from .statement import RType, IType
 
 
-class Add(Instruction):
+class Add(RType):
     mnemonic = 'add'
 
-    def execute(self):
+    def _execute(self):
         # TODO take care of overflow?
-        self.env.registers.ac += self.env.registers[self.operand1]
+        self.regs.ac = self.reg1 + self.reg2
 
 
-class ShiftRight(Instruction):
+class ShiftRight(RType):
     mnemonic = 'shr'
 
-    def execute(self):
+    def _execute(self):
         raise NotImplementedError
 
 
-class Jump(Instruction):
+class BranchEQ(RType):
+    mnemonic = 'beq'
 
-    def jump(self, label_name):
-        label = self.env.labels[label_name]
-        self.env.registers.pc = label.instruction_id
+    def _execute(self):
+        if self.reg1 == self.reg2:
+            label = self.env.labels[label_name]
+            self.regs.pc = label.instruction_id
 
 
 class Nop(Instruction):
-    mnemonic = '__nop'
+    mnemonic = 'nop'
 
-    def execute(self):
-        pass
+    def _init_attrs(self, operands):
+        if operands:
+            raise ValueError('Invalid number of operands')
+
+    def _execute(self):
+        self.env.execution_count -= 1
