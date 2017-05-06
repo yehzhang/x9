@@ -1,5 +1,6 @@
 /* Hello World program */
 
+// Notice:    quotient = ~quotient + 1;  we are using sub like quitient = 0 - quotient
 #include<stdio.h>
 
 int main()
