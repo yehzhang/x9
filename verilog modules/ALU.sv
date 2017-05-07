@@ -22,7 +22,8 @@ module ALU(
   input [7:0]  a,			  // data inputs
                b,
   output logic [7:0] out,		  // or:  output reg [7:0] OUT,
-  output logic cout			  // carry out
+  output logic cout,       // carry out
+  output logic zero			  // whether out is 0
     );
 
   always_comb begin
@@ -38,5 +39,5 @@ module ALU(
         kNeg:  out = ~a;
         default: out = 0;
     endcase
-
+    zero = out == 0;
 endmodule
