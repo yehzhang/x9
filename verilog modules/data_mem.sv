@@ -17,14 +17,14 @@ module data_mem #(parameter SIZE=256)(
   always_comb
     if(ctrl_mem_read) begin
       data_out = my_memory[addr];
-	  // $display("Memory read M[%d] = %d",addr,data_out);
+    // $display("Memory read M[%d] = %d",addr,data_out);
     end else
-      data_out = 16'bZ;
+      data_out = 'bZ;
 
   always_ff @ (posedge clk)
     if(ctrl_mem_write) begin
       my_memory[addr] = data_in;
-	  // $display("Memory write M[%d] = %d",addr,data_in);
+    // $display("Memory write M[%d] = %d",addr,data_in);
     end
 
 endmodule
