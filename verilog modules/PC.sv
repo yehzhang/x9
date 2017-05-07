@@ -1,21 +1,30 @@
-module PC(
-  input init,
-        jump_en,
-		branch_en,
-		CLK,
-  output logic halt,
-  output logic[15:0] PC);
+module PC #(parameter INST_WIDTH=9, OV=31)(
+    input clk,
+    input reset,
+    input ctrl_branch,
+    input alu_zero,
+    input [INST_WIDTH-1:0] inst_addr_in,
+    output logic[INST_WIDTH-1:0] inst_addr_out,
+    output logic halt
+    );
 
-always @(posedge CLK)
-  if(init) begin
-    PC <= 0;
-	halt <= 0;
-  end
-  else begin
-    if(PC<31)
-      PC <= PC + 1;
-	else 
-	  halt <= 1;
-  end
+    always_ff @(posedge clk) begin
+        if(reset) begin
+            inst_addr_out <= 0;
+            halt <= 0;
+        end else begin
+            if(ctrl_branch) begin
+                if(alu_zero) begin
+                    inst_addr_out = inst_addr_in;
+                end
+            end else begin
+                inst_addr_out <= inst_addr_out + 1;
+            end
+
+            if(inst_addr_out >= OV) begin
+                halt <= 1;
+            end
+        end
+    end
+
 endmodule
-        
