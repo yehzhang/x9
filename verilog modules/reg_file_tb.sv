@@ -25,20 +25,25 @@ module reg_file_tb;
 	  #100ns;
 
 // check if writing works
+		RegWrite   =  1;
 	  write_register   =  4'b1110;
 	  data_in = 8'd255;
-	  RegWrite   =  1;
+	  raddrA = 4'b1110;
 
+// check if writing works
 	  #20ns;
+	  RegWrite   =  1;
 	  write_register   =  4'b1001;
 	  data_in = 8'd200;
-	  RegWrite   =  1;
+	  raddrB = 4'b1001;
+
 
 	  #20ns;
 //verify writing without RegWrite has no impact
 	  RegWrite   =  0;
 	  write_register   =  4'b0011;
 	  data_in = 8'd155;
+	  raddrA = 4'b0011;
 
 	  #20ns $stop;
 	end
