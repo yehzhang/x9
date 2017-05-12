@@ -1,79 +1,51 @@
-// Engineer:
-//
-// Create Date:   13:31:49 10/17/2016
-// Design Name:   reg_file
-// Module Name:   reg_file_tb.v
-// Project Name:  lab_basics
-// Target Device:  
-// Tool versions:  
-// Description: 
-//
-// Verilog Test Fixture created by ISE for module: reg_file
-//
-// Dependencies:
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-
 module reg_file_tb;
-	parameter DT = 5,
-	          WT = 32;
-// DUT Input Drivers
 	bit          clk;	      // bit can be only 0, 1 (no x or z)
-    bit          RegWrite;   // bit self-initializes to 0, not x (handy)
-	bit [ DT-1:0] srcA,
-	              srcB,
-	              writeReg;
-	bit [ WT-1:0] writeValue;
-	typedef enum {hold, write} mne; 
-	mne op_mne;
-// DUT Outputs
-	wire [WT-1:0] ReadA,
-                  ReadB;
-
+  bit          RegWrite;   // bit self-initializes to 0, not x (handy)
+	bit [3:0] 		raddrA;
+	bit [3:0]			raddrB;
+	bit [3:0] 	  write_register;
+	bit [7:0] data_in;
+	wire [7:0] data_outA;
+  wire [7:0] data_outB;
 // Instantiate the Unit Under Test (UUT)
-	reg_file #(.W(WT),.D(DT)) uut(
-	  .clk        ,     // .clk(clk),
-	  .write_en (RegWrite  )  , 
-	  .raddrA   (srcA      )  , 
-	  .raddrB   (srcB      )  , 
-	  .waddr    (writeReg  )  , 
-	  .data_in  (writeValue)  , 
-	  .data_outA(ReadA     )  , 
-	  .data_outB(ReadB     ) 
+	reg_file  regFile_UUT(
+	  .clk,     // .clk(clk),
+	  .RegWrite,
+	  .raddrA,
+	  .raddrB ,
+	  .write_register,
+	  .data_in,
+	  .data_outA,
+	  .data_outB
 	);
-	assign op_mne = mne'(RegWrite);
 	initial begin
 // Initialize Inputs done for us by "bit"
 
 // Wait 100 ns for global reset to finish
 	  #100ns;
-        
-// Add stimulus here
+
 // check if writing works
-	  srcA       =  'h1;
-	  writeReg   =  'h1;
-	  writeValue = 'h6789ABCD;
+	  write_register   =  4'b1110;
+	  data_in = 8'd255;
 	  RegWrite   =  1;
-		
+
 	  #20ns;
-// verify writing to reg 0 does not work
-	  writeReg   = 'h0;
-	  writeValue = 32'hFEDC2030;
-	  srcB       = 'b0;	
+	  write_register   =  4'b1001;
+	  data_in = 8'd200;
+	  RegWrite   =  1;
+
 	  #20ns;
 //verify writing without RegWrite has no impact
 	  RegWrite   =  0;
-	  writeReg   =  'h2;
-	  writeValue = 'h0000_ABCD;
-	  srcA       =  'h2;
-	  #20ns $stop;	
+	  write_register   =  4'b0011;
+	  data_in = 8'd155;
+
+	  #20ns $stop;
 	end
+
 always begin
   #10ns clk = 1;
   #10ns clk = 0;
-end      
-endmodule
+end
 
+endmodule
