@@ -23,7 +23,7 @@ logic      cycle_ct;
 
 // Fetch = Program Counter + Instruction ROM
 // Program Counter
-    next_pc #(.OV(1000)) PC1(
+    IF #(.OV(1000)) PC1(
         .reset(start),
         .halt,
         .clk,
