@@ -45,6 +45,22 @@ module reg_file_tb;
 	  data_in = 8'd155;
 	  raddrA = 4'b0011;
 
+
+	  #20ns
+	  RegWrite = 1;
+	  write_register = 4'b0100;
+	  data_in = 2;
+
+	  #20ns
+	  RegWrite = 1;
+	  write_register = 4'b0011;
+	  data_in = 1;
+
+	  #20ns;
+	  RegWrite = 0;
+	  raddrA = 4'b0100;
+	  raddrB = 4'b0011;
+
 	  #20ns $stop;
 	end
 
