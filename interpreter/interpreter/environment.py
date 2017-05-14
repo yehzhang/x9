@@ -1,10 +1,13 @@
-class Envrionment:
-
+class Environment:
     def __init__(self, config):
         self.registers = Registers(config)
         self.memory = Memory(config)
         self.labels = {}
         self.execution_count = 0
+        self.aliases = {}
+        # :type Dict[str, Dict[str, int]]: e.g. luts[mnemonic][immediate]
+        self.luts = {}
+        self.pc = 0
 
     def __str__(self):
         return '\n'.join([
@@ -12,9 +15,11 @@ class Envrionment:
             'Dynamic instruction count: {}'.format(self.execution_count)
         ])
 
+    def unalias(self, op):
+        return self.aliases.get(op, op)
+
 
 class Registers:
-
     def __init__(self, config):
         assert len(config['reg_names']) <= 16
         assert 0 <= config['reg_default'] <= 0xff
@@ -38,6 +43,8 @@ class Registers:
         self.registers[name].set(value)
 
     __getitem__ = __getattr__
+
+    __setitem__ = __setattr__
 
 
 class Memory:
@@ -106,7 +113,6 @@ class Memory:
 
 
 class Byte:
-
     def __init__(self):
         self.value = 0
 

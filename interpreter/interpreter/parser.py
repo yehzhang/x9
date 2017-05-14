@@ -1,9 +1,8 @@
 import os
-import re
-from tempfile import TemporaryFile
 from subprocess import Popen, PIPE
-from .statement import RegisterStatementFabric, Instruction
-from .instructions import *
+
+from .statement import RegisterStatementFabric, Label
+from .instruction import *
 
 
 class Nano:
@@ -15,49 +14,66 @@ class Nano:
 
     def parse(self):
         """
-        :return Tuple[List[Instruction], List[Label]]:
+        :return Tuple[List[Label], List[Instruction]]:
         """
-        text = self.load_text()
+        # TODO LUTs
+        print(self.load_sections(self.filename))
+        a_sec, s_sec = self.load_sections(self.filename)
 
-        aliases = []
+        # Construct aliases
+        for a in a_sec:
+            _, s, t = a.split()
+            self.env.aliases[s] = t
+
+        # Parse and check statements
         labels = []
         insts = []
-        i = 0
-        for ln in text.splitlines():
-            words = ln.split()
-            inst_id, mnemonic = words[:2]
-            args = words[2:]
-
-            cls = RegisterStatementFabric.get(mnemonic)
+        i_ln = 0
+        for s in s_sec:
+            mne, _ = s.split(maxsplit=1)
             try:
-                stmt = cls(inst_id, self.env, args)
+                cls = RegisterStatementFabric.get(mne)
+                stmt = cls.new_instance('asm', i_ln, self.env, s)
             except Exception:
-                raise ValueError("Invalid statement: '{}'".format(ln))
+                raise SyntaxError('Invalid statement: ' + repr(s))
 
-            stmts.append(stmt)
+            if isinstance(stmt, Label):
+                labels.append(stmt)
+            else:
+                insts.append(stmt)
+                i_ln += 1
 
+        return labels, insts
 
-        return insts_sections
+    @classmethod
+    def load_sections(cls, filename):
+        """
+        :return List[List[str]]
+        """
+        text = cls.load_translation(filename)
+        return [sec.splitlines() for sec in text.split('\n\n')]
 
-    def load_sections(self):
-        pass
-
-    def load_text(self):
-        def popen(args, err_msg):
-            with Popen(args, stdout=PIPE, stderr=PIPE) as proc:
-                proc.wait()
-                stdout = proc.stdout.read().decode()
-                if proc.returncode != 0:
-                    stderr = proc.stderr.read().decode()
-                    raise RuntimeError('{}:\n{}{}'.format(err_msg, stdout, stderr))
-            return stdout
-
+    @classmethod
+    def load_translation(cls, filename):
+        """
+        :return str:
+        """
         this_dir = os.path.dirname(__file__)
         nano_dir = os.path.join(this_dir, './nano')
-        popen(['make', '-C', nano_dir], 'Failed to compile parser')
+        cls.popen(['make', '-C', nano_dir], 'Failed to compile parser')
 
-        translator_path = os.path.join(nano_dir, self.TARGET_NAME)
-        text = popen([translator_path, self.filename], 'Failed to parse')
+        translator_path = os.path.join(nano_dir, cls.TARGET_NAME)
+        text = cls.popen([translator_path, filename], 'Failed to parse')
         if text.startswith('Error: '):
             raise RuntimeError(text)
         return text
+
+    @staticmethod
+    def popen(args, err_msg):
+        with Popen(args, stdout=PIPE, stderr=PIPE) as proc:
+            proc.wait()
+            stdout = proc.stdout.read().decode()
+            if proc.returncode != 0:
+                stderr = proc.stderr.read().decode()
+                raise RuntimeError('{}. Parser message:\n\t{}{}'.format(err_msg, stdout, stderr))
+        return stdout

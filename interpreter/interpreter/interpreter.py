@@ -1,12 +1,10 @@
+from .environment import Environment
 from .parser import Nano
-from .environment import Envrionment
 
 
 class Interpreter:
     DEFAULT_CONFIG = {
-        'reg_names': [
-            'pc',
-            'ac',  # accumulator
+        'reg_names':   [
             'r0',
             'r1',
             'r2',
@@ -16,13 +14,16 @@ class Interpreter:
             'r6',
             'r7',
             'r8',
-            't0',
-            't1',
-            't2',
-            't3',
+            'r9',
+            'r10',
+            'r11',
+            'r12',
+            'r13',
+            'r14',
+            'r15',
         ],
         'reg_default': 0,
-        'mem_size': 256,
+        'mem_size':    256,
         'mem_default': 0,
     }
 
@@ -31,15 +32,11 @@ class Interpreter:
         new_config.update(config or {})
         self.config = new_config
 
-        # Ensure pc and ac exist in the names
-        if not set(['pc', 'ac']) <= set(self.config.names):
-            raise ValueError("'pc' and 'ac' do not exist in 'reg_names'")
-
         self.env = None
         self.insts = None
 
     def load(self, filename):
-        self.env = Envrionment(self.config)
+        self.env = Environment(self.config)
         labels, self.insts = Nano(filename, self.env).parse()
         # Add references to labels
         for label in labels:
@@ -51,16 +48,15 @@ class Interpreter:
         if self.insts is None:
             raise RuntimeError('Assembly file is not loaded')
 
-        # Skip the first nop instruction
-        self.env.registers.pc = 1
+        self.env.pc = 0
 
         while True:
-            if self.env.registers.pc >= len(self.insts):
+            if self.env.pc >= len(self.insts):
                 break
 
-            inst = self.insts[self.env.registers.pc]
-            inst.execute()
+            inst = self.insts[self.env.pc]
+            inst.run()
 
-            self.env.registers.pc += 1
+            self.env.pc += 1
 
         print(self.env)
