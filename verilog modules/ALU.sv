@@ -1,3 +1,4 @@
+// TODO refactor cin and cout as an internal register?
 import ALU_def::*;
 module ALU(
   input cin,
