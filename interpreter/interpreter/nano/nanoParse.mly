@@ -7,7 +7,7 @@ open Nano
 %token <string> Id
 %token COLON
 %token COMMA
-%token EQUAL
+%token DEFINE
 
 %start program
 %type <Nano.program> program
@@ -15,15 +15,13 @@ open Nano
 %%
 
 program:
-  | maybe_section_list { $1, $2 }
-
-maybe_section_list:
-  |                                       { [] }
   | section_list                          { $1 }
 
 section_list:
-  | maybe_alias_list section_list         { AliasSection $1 :: $2 }
-  | maybe_statement_list                  { [StatementSection $1] }
+  | maybe_alias_list post_alias_section_list { AliasHeader $1 :: $2 }
+
+post_alias_section_list:
+  | maybe_statement_list                  { [Body $1] }
 
 maybe_alias_list:
   |                                       { [] }
@@ -34,7 +32,7 @@ alias_list:
   | alias                                 { [$1] }
 
 alias:
-  | Id EQUAL operand                      { Alias ($1, $3) }
+  | DEFINE Id base_operand                { $2, $3 }
 
 maybe_statement_list:
   |                                       { [] }
@@ -54,9 +52,12 @@ operand_list:
   | operand                               { [$1] }
 
 operand:
-  | Num                                   { Imm $1 }
-  | Id                                    { Reg $1 }
+  | base_operand                          { $1 }
   | label_symbol                          { LabelRef $1 }
+
+base_operand:
+  | Num                                   { Imm $1 }
+  | Id                                    { Var $1 }
 
 label_symbol:
   | Id COLON                              { $1 }
