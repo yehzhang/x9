@@ -30,6 +30,11 @@ class Statement(metaclass=RegisterStatementFabric):
     def __init__(self, instruction_id, env):
         self.instruction_id = instruction_id
         self.env = env
+        self.init_attrs()
+
+    def init_attrs(self):
+        """ Subclasses overwrites this method to initialize attributes. """
+        raise NotImplementedError
 
     @classmethod
     def new_instance(cls, src, instruction_id, env, text):
@@ -49,3 +54,6 @@ class Statement(metaclass=RegisterStatementFabric):
 class Label(Statement):
     mnemonic = 'label'
     asm_mapper = asm.Mnemonic() | asm.Id('name')
+
+    def init_attrs(self):
+        self.name = None

@@ -26,11 +26,13 @@ class RType(Instruction):
     funct = None
     machine_code_mapper = mc.Opcode('opcode', 3) | mc.Register('rd', 4) | mc.Funct('funct', 2)
 
-    def execute(self):
-        self.registers[self.rd] = self.binop(
-            self.registers.r0, self.registers.r1)
+    def init_attrs(self):
+        self.rd = None
 
-    def binop(self, a, b):
+    def execute(self):
+        self.registers[self.rd] = self.alu_op(self.registers.r0, self.registers.r1)
+
+    def alu_op(self, a, b):
         """
         :param int a:
         :param int b:
@@ -44,10 +46,18 @@ class MType(Instruction):
     machine_code_mapper = mc.Opcode('opcode', 3) | mc.Register(
         'rs', 4) | mc.Register('rt', 1) | mc.Unused(1)
 
+    def init_attrs(self):
+        self.rt = None
+        self.rs = None
+
 
 class IType(Instruction):
     asm_mapper = asm.Mnemonic() | asm.Register('rt', 1) | asm.Immediate('imm', 5)
     machine_code_mapper = mc.Opcode('opcode', 3) | mc.Register('rt', 1) | mc.Immediate('imm', 5)
+
+    def init_attrs(self):
+        self.rt = None
+        self.imm = None
 
 
 class BType(Instruction):
@@ -56,14 +66,19 @@ class BType(Instruction):
     funct = None
     machine_code_mapper = mc.Opcode('opcode', 3) | mc.Immediate('imm', 4) | mc.Funct('funct', 2)
 
+    def init_attrs(self):
+        self.imm = None
+
     def execute(self):
-        if self.branch_taken():
+        if self.take_branch(self.registers.r0, self.registers.r1):
             label = self.env.labels[self.imm]
             # interpreter increments pc in each cycle
             self.registers.pc = label.instruction_id - 1
 
-    def branch_taken(self):
+    def take_branch(self):
         """
+        :param int a:
+        :param int b:
         :return bool:
         """
         raise NotImplementedError
@@ -71,23 +86,28 @@ class BType(Instruction):
 
 class Add(RType):
     mnemonic = 'add'
-    opcode = None
-    funct = None
+    opcode = None  # TODO
+    funct = None  # TODO
 
-    def binop(self, a, b):
+    def alu_op(self, a, b):
         # TODO take care of overflow?
         return a + b
 
 
 class ShiftRightArithmetic(RType):
     mnemonic = 'sra'
+    opcode = None  # TODO
+    funct = None  # TODO
 
-    def binop(self, a, b):
+    def alu_op(self, a, b):
+        # TODO
         raise NotImplementedError
 
 
 class BranchEqual(BType):
     mnemonic = 'beq'
+    opcode = None  # TODO
+    funct = None  # TODO
 
-    def branch_taken(self):
-        return self.registers.r0 == self.registers.r1
+    def take_branch(self, a, b):
+        return a == b
