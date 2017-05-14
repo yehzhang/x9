@@ -29,9 +29,6 @@ $(OCAML_EXE): $(OCAML_EXE_OBJ:%=%.cmo)
 	$(OCAML_YACC) $<
 	$(OCAML_C) -c $(@:%.ml=%.mli)
 
-main.cmo: $(OCAML_EXE_OBJ:%=%.cmo)
-	$(OCAML_C) -c main.ml
-
 # ocamllex nanoLex.mll
 # ocamlyacc nanoParse.mly
 # ocamlc -c nano.ml
