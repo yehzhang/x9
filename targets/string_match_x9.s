@@ -1,20 +1,20 @@
 # lw LUT:
 # STRING_LENGTH = 64
 
-STRING_ADDR_KEY = 90
-STRING_LENGTH_KEY = 64
+define STRING_ADDR_KEY 90
+define STRING_LENGTH_KEY 64
 
-I_ADDR = ??
+# define I_ADDR ??
 
-p_string = s0
-pattern = s1
-slice = s2
-count = s3
-i_lo = s4
-i_hi = s5
+define p_string s0
+define pattern s1
+define slice s2
+define count s3
+define i_lo s4
+define i_hi s5
 
-byte = t0
-bit = t1
+define byte t0
+define bit t1
 
     # char count = 0;
     set 0
@@ -73,7 +73,7 @@ for_entry:
         sub r1  # - i % 8
         set 7
         sub r1 # 7 - i % 8
-        mov r0 byte
+        mov r0, byte
         sra r1 # byte >> (7 - i % 8)
         set 1
         and bit
