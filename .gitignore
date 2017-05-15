@@ -131,4 +131,4 @@ nanoml.top
 
 nano/.*
 
-interpreter/nano/translator
+interpreter/interpreter/nano/translator
