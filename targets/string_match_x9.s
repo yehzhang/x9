@@ -56,8 +56,8 @@ for_entry:
 
         # char byte = p_string[i / 8];
         set 3
-        mov r1 r0
-        mov r0 i
+        mov r1, r0
+        mov r0, i
         srl r1
         add r1
         mov r0, p_string
