@@ -19,11 +19,16 @@ class RegisterStatementFabric(type):
 
     @classmethod
     def get(mcs, ref_name):
-        return mcs.insts[ref_name]
+        cls = mcs.insts.get(ref_name)
+        if cls is None:
+            raise ValueError('Unknown statement name')
+        return cls
 
 
 class Statement(metaclass=RegisterStatementFabric):
     mnemonic = None
+
+    # Add mappers here to support more languages
     asm_mapper = None
     machine_code_mapper = None
 
@@ -39,12 +44,16 @@ class Statement(metaclass=RegisterStatementFabric):
     @classmethod
     def new_instance(cls, src, instruction_id, env, text):
         obj = cls(instruction_id, env)
-        mapper = getattr(cls, src + '_mapper')
+        mapper = getattr(cls, src + '_mapper', None)
+        if mapper is None:
+            raise NotImplementedError('Mapper is not supported')
         mapper.deserialize(env, text, obj)
         return obj
 
     def as_code(self, target):
-        mapper = getattr(self, target + '_mapper')
+        mapper = getattr(self, target + '_mapper', None)
+        if mapper is None:
+            raise NotImplementedError('Mapper is not supported')
         return mapper.serialize(self.env, self)
 
     def __repr__(self):
@@ -53,6 +62,7 @@ class Statement(metaclass=RegisterStatementFabric):
 
 class Label(Statement):
     mnemonic = 'label'
+
     asm_mapper = asm.Mnemonic() | asm.Id('name')
 
     def init_attrs(self):

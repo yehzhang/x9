@@ -1,12 +1,17 @@
+from collections import defaultdict
+
 class Environment:
     def __init__(self, config):
         self.registers = Registers(config)
         self.memory = Memory(config)
+        # :type Dict[str, Label]: {label_name: Label}
         self.labels = {}
         self.execution_count = 0
         self.aliases = {}
-        # :type Dict[str, Dict[str, int]]: e.g. luts[mnemonic][immediate]
-        self.luts = {}
+        # :type Dict[str, Dict[str, int]]: populated by TokenMappers in asm module
+        # e.g. instruction_id = luts[BranchEqual.mnemonic][immediate]
+        # e.g. addr = luts[LoadWord.mnemonic][immediate]
+        self.luts = defaultdict(dict)
         self.pc = 0
 
     def __str__(self):
@@ -26,8 +31,9 @@ class Registers:
 
         super().__setattr__('names', config['reg_names'])
 
-        registers = make_bytes(config['reg_default'], len(self.names))
-        super().__setattr__('registers', dict(zip(self.names, registers)))
+        regs = make_bytes(config['reg_default'], len(self.names))
+        regs = dict(zip(self.names, regs))
+        super().__setattr__('registers', regs)
 
     def __str__(self):
         return self.as_str(0)
@@ -42,9 +48,17 @@ class Registers:
     def __setattr__(self, name, value):
         self.registers[name].set(value)
 
-    __getitem__ = __getattr__
+    def __getitem__(self, key):
+        """
+        :param int key:
+        """
+        return self.__getattr__(self.names[key])
 
-    __setitem__ = __setattr__
+    def __setitem__(self, key, value):
+        """
+        :param int key:
+        """
+        return self.__setattr__(self.names[key], value)
 
 
 class Memory:
@@ -96,8 +110,8 @@ class Memory:
         if signed:
             msb_mask = 1 << (size * 8 - 1)
             if value & msb_mask:  # if negative
-                max_value = 2 ** (size * 8)
-                value -= max_value
+                upper_bound = 2 ** (size * 8)
+                value -= upper_bound
 
         return value
 
@@ -106,7 +120,7 @@ class Memory:
         assert 0 <= addr
         assert addr + size <= len(self.memory)
 
-        value = convert_to_unsigned_integer(value, size)
+        value = convert_to_unsigned_integer(value, size * 8)
         for i in range(size - 1, -1, -1):
             self.memory[addr + i].set(value & 0xff)
             value >>= 8
@@ -121,7 +135,7 @@ class Byte:
 
     def set(self, value):
         # Signed minimum and unsigned maximum
-        self.value = convert_to_unsigned_integer(value, 1)
+        self.value = convert_to_unsigned_integer(value, 8)
         return self
 
     def get(self):
@@ -129,11 +143,14 @@ class Byte:
 
 
 def convert_to_unsigned_integer(value, size):
-    max_value = 2 ** (size * 8)
-    if not (-max_value // 2 <= value < max_value):
+    """
+    :param int size: number of bits containing this integer
+    """
+    upper_bound = 2 ** size
+    if not (-upper_bound // 2 <= value < upper_bound):
         msg = '{} is out of range of {} bytes'.format(value, size)
         raise ValueError(msg)
-    all_f_mask = max_value - 1
+    all_f_mask = upper_bound - 1
     return value & all_f_mask
 
 

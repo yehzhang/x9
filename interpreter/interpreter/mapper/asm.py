@@ -1,42 +1,82 @@
-from .mapper import TokenMapper, BitConstrained
+from .mapper import TokenMapper, BitConstrained, Processor
+
+
+class Unaliaser(Processor):
+    def apply(self, env, value):
+        return env.unalias(value)
 
 
 class Asm(TokenMapper):
+    pre_processors = Unaliaser(),
+
     def tokenize(self, text):
         segments = text.split(maxsplit=1)
         if len(segments) == 1:
             segments.append('')
         return segments
 
+    def join(self, token, text):
+        return token + ', ' + text
+
 
 class Id(Asm):
-    def parse(self, env, word):
+    def parse(self, env, cls, word):
         return word
 
 
 class Mnemonic(Id):
-    def __init__(self):
-        super().__init__(None)
+    def join(self, token, text):
+        return token + ' ' + text
 
 
 class Register(Asm, BitConstrained):
-    def parse(self, env, word):
-        word = env.unalias(word)
-        valid_names = env.registers.names[:self.max_value]
-        if word not in valid_names:
-            raise SyntaxError('Register number exceeds available bits')
-        return word
+    def parse_constrained(self, env, cls, word):
+        try:
+            return env.registers.names.index(word)
+        except ValueError:
+            raise SyntaxError('Invalid register name')
 
 
 class Immediate(Asm, BitConstrained):
-    def parse(self, env, word):
-        word = env.unalias(word)
-        try:
-            imm = int(word, 0)
-        except ValueError:
-            # TODO replace with LUT. need to know current mnemonic / class
-            imm = word
-        else:
-            if imm >= self.max_value:
-                raise SyntaxError('Immediate exceeds available bits')
-        return imm
+    pass
+
+
+class LutKeyed(Immediate):
+    def parse_constrained(self, env, cls, word):
+        lut = env.luts[cls.mnemonic]
+        lut_value = self.parse_lut_value(word)
+        lut_key = lut.setdefault(lut_value, len(lut))
+        return lut_key
+
+    def parse_lut_value(self, env, cls, word):
+        raise NotImplementedError
+
+
+class LabelReference(LutKeyed):
+    def parse_lut_value(self, env, cls, word):
+        label = env.labels.get(word)
+        if label is None:
+            raise ValueError('Label name not found')
+        return label.instruction_id
+
+
+class MemoryAddress(LutKeyed):
+    def parse_lut_value(self, env, cls, word):
+        return int(word, 0)
+
+
+class IntegerLiteral(Immediate):
+    def parse_constrained(self, env, cls, word):
+        return int(word, 0)
+
+
+class MemoryAddressOrIntegerLiteral(TokenMapper):
+    """ Geez it perfectly demonstrates how twisted the ISA is. """
+    def __init__(self, attr, bits):
+        super().__init__(attr)
+        self.mem_addr_mapper = MemoryAddress(attr, bits)
+        self.lit_mapper = IntegerLiteral(attr, bits)
+
+    def parse(self, env, cls, word):
+        mapper = self.lit_mapper if cls.mnemonic == 'set' else self.mem_addr_mapper
+        return mapper.parse(env, cls, word)

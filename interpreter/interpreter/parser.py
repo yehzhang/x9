@@ -14,36 +14,38 @@ class Nano:
 
     def parse(self):
         """
-        :return Tuple[List[Label], List[Instruction]]:
+        :return List[Instruction]:
         """
-        # TODO LUTs
-        print(self.load_sections(self.filename))
         a_sec, s_sec = self.load_sections(self.filename)
 
-        # Construct aliases
-        for a in a_sec:
-            _, s, t = a.split()
-            self.env.aliases[s] = t
+        self.populate_aliases(a_sec)
 
-        # Parse and check statements
-        labels = []
-        insts = []
+        # Parse, instantiate, and check statements
+        inst_asms = []
         i_ln = 0
-        for s in s_sec:
-            mne, _ = s.split(maxsplit=1)
-            try:
+        try:
+            for s in s_sec:
+                mne, _ = s.split(maxsplit=1)
                 cls = RegisterStatementFabric.get(mne)
-                stmt = cls.new_instance('asm', i_ln, self.env, s)
-            except Exception:
-                raise SyntaxError('Invalid statement: ' + repr(s))
+                # Register all labels before any instruction
+                if cls is Label:
+                    label = cls.new_instance('asm', i_ln, self.env, s)
+                    self.env.labels[label.name] = label
+                else:
+                    inst_asms.append((i_ln, s))
+                    i_ln += 1
 
-            if isinstance(stmt, Label):
-                labels.append(stmt)
-            else:
-                insts.append(stmt)
-                i_ln += 1
+            return [cls.new_instance('asm', i_ln, self.env, s) for (i_ln, s) in inst_asms]
+        except Exception:
+            raise SyntaxError('Invalid statement: ' + repr(s))
 
-        return labels, insts
+    def populate_aliases(self, section):
+        aliases = self.env.aliases
+        for a in section:
+            _, s, t = a.split()
+            if s in aliases:
+                raise ValueError('Alias conflicts: ' + repr(s))
+            aliases[s] = t
 
     @classmethod
     def load_sections(cls, filename):

@@ -1,4 +1,4 @@
-from .mapper import asm, machine_code as mc
+from .mapper import asm as S, machine_code as B
 from .statement import Statement
 
 
@@ -21,10 +21,10 @@ class Instruction(Statement):
 
 
 class RType(Instruction):
-    asm_mapper = asm.Mnemonic() | asm.Register('rd', 4)
+    asm_mapper = S.Mnemonic('mnemonic') | S.Register('rd', 4)
 
     funct = None
-    machine_code_mapper = mc.Opcode('opcode', 3) | mc.Register('rd', 4) | mc.Funct('funct', 2)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rd', 4) | B.Bits('funct', 2)
 
     def init_attrs(self):
         self.rd = None
@@ -42,9 +42,8 @@ class RType(Instruction):
 
 
 class MType(Instruction):
-    asm_mapper = asm.Mnemonic() | asm.Register('rt', 1) | asm.Register('rs', 4)
-    machine_code_mapper = mc.Opcode('opcode', 3) | mc.Register(
-        'rs', 4) | mc.Register('rt', 1) | mc.Unused(1)
+    asm_mapper = S.Mnemonic('mnemonic') | S.Register('rt', 1) | S.Register('rs', 4)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rs', 4) | B.Bits('rt', 1) | B.Unused(1)
 
     def init_attrs(self):
         self.rt = None
@@ -52,8 +51,9 @@ class MType(Instruction):
 
 
 class IType(Instruction):
-    asm_mapper = asm.Mnemonic() | asm.Register('rt', 1) | asm.Immediate('imm', 5)
-    machine_code_mapper = mc.Opcode('opcode', 3) | mc.Register('rt', 1) | mc.Immediate('imm', 5)
+    asm_mapper = S.Mnemonic('mnemonic') | S.Register(
+        'rt', 1) | S.MemoryAddressOrIntegerLiteral('imm', 5)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rt', 1) | B.Bits('imm', 5)
 
     def init_attrs(self):
         self.rt = None
@@ -61,21 +61,23 @@ class IType(Instruction):
 
 
 class BType(Instruction):
-    asm_mapper = asm.Mnemonic() | asm.Immediate('imm', 4)
+    asm_mapper = S.Mnemonic('mnemonic') | S.LabelReference('imm', 4)
 
     funct = None
-    machine_code_mapper = mc.Opcode('opcode', 3) | mc.Immediate('imm', 4) | mc.Funct('funct', 2)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('imm', 4) | B.Bits('funct', 2)
 
     def init_attrs(self):
+        # :type int:
         self.imm = None
 
     def execute(self):
         if self.take_branch(self.registers.r0, self.registers.r1):
-            label = self.env.labels[self.imm]
+            lut = self.env.luts[self.mnemonic]
+            instruction_id = lut[self.imm]
             # interpreter increments pc in each cycle
-            self.registers.pc = label.instruction_id - 1
+            self.env.pc = instruction_id - 1
 
-    def take_branch(self):
+    def take_branch(self, a, b):
         """
         :param int a:
         :param int b:

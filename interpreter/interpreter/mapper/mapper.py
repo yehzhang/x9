@@ -1,9 +1,20 @@
+from ..environment import convert_to_unsigned_integer
+
+
 class TokenMapper:
-    """ Map a token in a language to a Python value. """
+    """ Map a token in a language to a Python value.
+    :param str attr: The name of an attribute of an object mapped with this token.
+        If None, the object is unmodified during deserialization and nothing is produced during
+        serialization.
+    :type Processor pre_processors: Called with word before parsing
+    :type Processor post_processors: Called with word after parsing
+    """
+    pre_processors = ()
+    post_processors = ()
 
     def __init__(self, attr=None):
         self.attr = attr
-        self.origin_attr = '_' + attr if attr else None
+        self.src_attr = self._to_src_attr_name(attr) if attr else None
 
     def __or__(self, other):
         """
@@ -14,12 +25,21 @@ class TokenMapper:
 
     def parse_and_set_attr(self, env, word, obj):
         """ Setting attribute is skipped during deserialization if not specified. """
-        value = self.parse(env, word)
+        for p in self.pre_processors:
+            word = p.apply(env, word)
+        value = self.parse(env, type(obj), word)
+        for p in self.post_processors:
+            value = p.apply(env, value)
+
         if self.attr:
             setattr(obj, self.attr, value)
-            setattr(obj, self.origin_attr, word)
+            setattr(obj, self.src_attr, word)
 
     def get_attr_and_compose(self, env, obj):
+        value = getattr(obj, self.src_attr, None)
+        if value is not None:
+            return value
+
         value = getattr(obj, self.attr, None)
         return self.compose(env, value)
 
@@ -29,7 +49,7 @@ class TokenMapper:
         """
         raise NotImplementedError
 
-    def parse(self, env, word):
+    def parse(self, env, cls, word):
         """
         :return Any: parsed word
         """
@@ -40,6 +60,18 @@ class TokenMapper:
         :return str: a component in target language
         """
         raise NotImplementedError
+
+    def join(self, token, text):
+        """
+        :param str token: token tokenized by this mapper
+        :param str text: the following text
+        :return str:
+        """
+        raise NotImplementedError
+
+    @classmethod
+    def _to_src_attr_name(cls, attr):
+        return '_src_{}_{}'.format(cls.__qualname__, attr)
 
 
 class InstructionMapper:
@@ -69,12 +101,14 @@ class InstructionMapper:
         """
         :return str: an instruction in target language
         """
-        tokens = []
-        for m in self.mappers:
+        text = None
+        for m in reversed(self.mappers):
             token = m.get_attr_and_compose(env, obj)
-            if token:
-                tokens.append(token)
-        return ''.join(tokens)
+            if text is None:
+                text = token
+            else:
+                text = m.join(token, text)
+        return text
 
 
 class BitConstrained(TokenMapper):
@@ -83,4 +117,25 @@ class BitConstrained(TokenMapper):
     def __init__(self, attr, bits):
         super().__init__(attr)
         self.bits = bits
-        self.max_value = bits ** 2
+        self.upper_bound = bits ** 2
+
+    def parse(self, env, cls, word):
+        """
+        :return int:
+        """
+        value = self.parse_constrained(env, cls, word)
+        if convert_to_unsigned_integer(value, self.bits) >= self.upper_bound:
+            raise ValueError('Value of token exceeds available bits')
+        return value
+
+    def parse_constrained(self, env, cls, word):
+        """
+        :return int:
+        """
+        raise NotImplementedError
+
+
+class Processor:
+
+    def apply(self, env, value):
+        raise NotImplementedError

@@ -37,10 +37,7 @@ class Interpreter:
 
     def load(self, filename):
         self.env = Environment(self.config)
-        labels, self.insts = Nano(filename, self.env).parse()
-        # Add references to labels
-        for label in labels:
-            self.env.labels[label.name] = label
+        self.insts = Nano(filename, self.env).parse()
         return self
 
     def run(self):
