@@ -3,7 +3,7 @@ open Nano
 %}
 
 %token EOF
-%token <int> Num
+%token <string> Num
 %token <string> Id
 %token COLON
 %token COMMA

@@ -1,7 +1,7 @@
 exception MLFailure of string
 
 type operand =
-  | Imm of int
+  | Imm of string
   | Var of string
   | LabelRef of string
 
@@ -18,7 +18,7 @@ type program = section list
 
 let operand_to_string op =
   match op with
-  | Imm      i -> string_of_int i
+  | Imm      i -> i
   | Var      n -> n
   | LabelRef n -> n
 

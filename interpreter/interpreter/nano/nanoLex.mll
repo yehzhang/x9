@@ -24,7 +24,7 @@ rule token = parse
 
   | "define"                      { DEFINE }
 
-  | number_literal as l           { Num (int_of_string l) }
+  | number_literal as l           { Num l }
   | letter alnum* as l            { Id l }
 
   | _                             { raise (MLFailure ("Illegal Character '"^(Lexing.lexeme lexbuf)^"'")) }
