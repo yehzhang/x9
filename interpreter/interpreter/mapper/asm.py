@@ -1,14 +1,7 @@
-from .mapper import TokenMapper, BitConstrained, Processor
-
-
-class Unaliaser(Processor):
-    def apply(self, env, value):
-        return env.unalias(value)
+from .mapper import TokenMapper, BitConstrained
 
 
 class Asm(TokenMapper):
-    pre_processors = Unaliaser(),
-
     def tokenize(self, text):
         segments = text.split(maxsplit=1)
         if len(segments) == 1:
@@ -29,20 +22,29 @@ class Mnemonic(Id):
         return token + ' ' + text
 
 
-class Register(Asm, BitConstrained):
+class Unaliasable(Asm, BitConstrained):
     def parse_constrained(self, env, cls, word):
+        word = env.unalias(word)
+        return self.parse_unaliased(env, cls, word)
+
+    def parse_unaliased(self, env, cls, word):
+        raise NotImplementedError
+
+
+class Register(Unaliasable):
+    def parse_unaliased(self, env, cls, word):
         try:
             return env.registers.names.index(word)
         except ValueError:
             raise SyntaxError('Invalid register name')
 
 
-class Immediate(Asm, BitConstrained):
+class Immediate(Unaliasable):
     pass
 
 
 class LutKeyed(Immediate):
-    def parse_constrained(self, env, cls, word):
+    def parse_unaliased(self, env, cls, word):
         lut = env.luts[cls.mnemonic]
         lut_value = self.parse_lut_value(word)
         lut_key = lut.setdefault(lut_value, len(lut))
@@ -66,7 +68,7 @@ class MemoryAddress(LutKeyed):
 
 
 class IntegerLiteral(Immediate):
-    def parse_constrained(self, env, cls, word):
+    def parse_unaliased(self, env, cls, word):
         return int(word, 0)
 
 
