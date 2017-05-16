@@ -6,11 +6,7 @@ class TokenMapper:
     :param str attr: The name of an attribute of an object mapped with this token.
         If None, the object is unmodified during deserialization and nothing is produced during
         serialization.
-    :type Processor pre_processors: Called with word before parsing
-    :type Processor post_processors: Called with word after parsing
     """
-    pre_processors = ()
-    post_processors = ()
 
     def __init__(self, attr=None):
         self.attr = attr
@@ -25,11 +21,7 @@ class TokenMapper:
 
     def parse_and_set_attr(self, env, word, obj):
         """ Setting attribute is skipped during deserialization if not specified. """
-        for p in self.pre_processors:
-            word = p.apply(env, word)
         value = self.parse(env, type(obj), word)
-        for p in self.post_processors:
-            value = p.apply(env, value)
 
         if self.attr:
             setattr(obj, self.attr, value)
@@ -132,10 +124,4 @@ class BitConstrained(TokenMapper):
         """
         :return int:
         """
-        raise NotImplementedError
-
-
-class Processor:
-
-    def apply(self, env, value):
         raise NotImplementedError

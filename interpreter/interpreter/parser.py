@@ -2,7 +2,6 @@ import os
 from subprocess import Popen, PIPE
 
 from .statement import RegisterStatementFabric, Label
-from .instruction import *
 
 
 class Nano:
