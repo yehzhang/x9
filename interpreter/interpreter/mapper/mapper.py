@@ -19,8 +19,11 @@ class TokenMapper:
         """
         return InstructionMapper() | self | other
 
+    def __and__(self, other):
+        return self | InstructionSeparator() | other
+
     def parse_and_set_attr(self, env, word, obj):
-        """ Setting attribute is skipped during deserialization if not specified. """
+        """ Setting attribute is skipped during deserialization if attr is not specified. """
         value = self.parse(env, type(obj), word)
 
         if self.attr:
@@ -28,12 +31,14 @@ class TokenMapper:
             setattr(obj, self.src_attr, word)
 
     def get_attr_and_compose(self, env, obj):
+        """ Getting attribute is skipped during serialization if attr is not specified. """
         value = getattr(obj, self.src_attr, None)
         if value is not None:
             return value
 
         value = getattr(obj, self.attr, None)
-        return self.compose(env, value)
+        if value is not None:
+            return self.compose(env, value)
 
     def tokenize(self, text):
         """
@@ -81,6 +86,9 @@ class InstructionMapper:
             assert False
         return self
 
+    def __and__(self, other):
+        return self | InstructionSeparator() | other
+
     def deserialize(self, env, text, obj):
         for m in self.mappers:
             token, text = m.tokenize(text)
@@ -96,6 +104,8 @@ class InstructionMapper:
         text = None
         for m in reversed(self.mappers):
             token = m.get_attr_and_compose(env, obj)
+            if token is None:
+                continue
             if text is None:
                 text = token
             else:
@@ -125,3 +135,23 @@ class BitConstrained(TokenMapper):
         :return int:
         """
         raise NotImplementedError
+
+
+class InstructionSeparator(TokenMapper):
+    """ Convert an Instruction object to multiple instructions in the target language.
+    Note that the conversion is not injective, meaning that the converted instructions
+    cannot be mapped back to the original Instruction object, possibly multiple objects
+    instead.
+    """
+    def __init__(self, sep='\n'):
+        super().__init__(None)
+        self.sep = sep
+
+    def compose(self, env, value):
+        return ''
+
+    def join(self, token, text):
+        """
+        :param str token: should be the '' returned by compose
+        """
+        return token + self.sep + text
