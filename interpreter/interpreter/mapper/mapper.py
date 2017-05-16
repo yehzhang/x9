@@ -20,6 +20,10 @@ class TokenMapper:
         return InstructionMapper() | self | other
 
     def __and__(self, other):
+        """
+        :param TokenMapper other:
+        :return InstructionMapper:
+        """
         return self | InstructionSeparator() | other
 
     def parse_and_set_attr(self, env, word, obj):
@@ -78,6 +82,10 @@ class InstructionMapper:
         self.mappers = []
 
     def __or__(self, other):
+        """ Combine two mappers of an instruction
+        :param TokenMapper other:
+        :return InstructionMapper:
+        """
         if isinstance(other, TokenMapper):
             self.mappers.append(other)
         elif isinstance(other, InstructionMapper):
@@ -87,6 +95,10 @@ class InstructionMapper:
         return self
 
     def __and__(self, other):
+        """ Concatenate mappers of two instructions
+        :param TokenMapper other:
+        :return InstructionMapper:
+        """
         return self | InstructionSeparator() | other
 
     def deserialize(self, env, text, obj):
