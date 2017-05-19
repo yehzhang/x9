@@ -95,7 +95,7 @@ class RType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('rd', 4)
 
     funct = None
-    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('rd', 4) | B.Bits('funct', 2)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rd', 4) | B.Bits('funct', 2)
 
     def init_attrs(self):
         self.rd = None
@@ -116,7 +116,7 @@ class RType(Instruction):
 
 class MType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('rt', 1) | S.Register('rs', 4)
-    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('rs', 4) | B.Bits('rt', 1) | B.Unused(1)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rs', 4) | B.Bits('rt', 1) | B.Unused(1)
 
     def init_attrs(self):
         self.rt = None
@@ -126,7 +126,7 @@ class MType(Instruction):
 class IType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register(
         'rt', 1) | S.MemoryAddressOrIntegerLiteral('imm', 5)
-    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('rt', 1) | B.Bits('imm', 5)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rt', 1) | B.Bits('imm', 5)
 
     def init_attrs(self):
         self.rt = None
@@ -137,7 +137,7 @@ class BType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.LabelReference('imm', 4)
 
     funct = None
-    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('imm', 4) | B.Bits('funct', 2)
+    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('imm', 4) | B.Bits('funct', 2)
 
     def init_attrs(self):
         # :type int:

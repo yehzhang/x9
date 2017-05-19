@@ -2,8 +2,12 @@ from .mapper import TokenMapper
 
 
 class MachineCode(TokenMapper):
+    def __init__(self, attr, bits, underscore=True):
+        super().__init__(attr, bits)
+        self.sep = '_' if underscore else ''
+
     def join(self, token, text):
-        return token + text
+        return token + self.sep + text
 
 
 class Bits(MachineCode):
@@ -24,8 +28,3 @@ class Unused(Bits):
 
     def compose(self, env, value):
         return super().compose(env, 0)
-
-
-class Opcode(MachineCode):
-    def join(self, token, text):
-        return token + '_' + text
