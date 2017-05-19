@@ -92,13 +92,15 @@ class RType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('rd', 4)
 
     funct = None
-    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rd', 4) | B.Bits('funct', 2)
+    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('rd', 4) | B.Bits('funct', 2)
 
     def init_attrs(self):
         self.rd = None
 
     def execute(self):
-        self.registers[self.rd] = self.alu_op(self.registers.r0, self.registers.r1)
+        alu_out = self.alu_op(self.registers.r0, self.registers.r1)
+        # TODO take care of overflow
+        self.registers[self.rd] = alu_out
 
     def alu_op(self, a, b):
         """
@@ -111,7 +113,7 @@ class RType(Instruction):
 
 class MType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('rt', 1) | S.Register('rs', 4)
-    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rs', 4) | B.Bits('rt', 1) | B.Unused(1)
+    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('rs', 4) | B.Bits('rt', 1) | B.Unused(1)
 
     def init_attrs(self):
         self.rt = None
@@ -121,7 +123,7 @@ class MType(Instruction):
 class IType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register(
         'rt', 1) | S.MemoryAddressOrIntegerLiteral('imm', 5)
-    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('rt', 1) | B.Bits('imm', 5)
+    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('rt', 1) | B.Bits('imm', 5)
 
     def init_attrs(self):
         self.rt = None
@@ -132,7 +134,7 @@ class BType(Instruction):
     asm_mapper = S.Mnemonic('mnemonic') | S.LabelReference('imm', 4)
 
     funct = None
-    machine_code_mapper = B.Bits('opcode', 3) | B.Bits('imm', 4) | B.Bits('funct', 2)
+    machine_code_mapper = B.Opcode('opcode', 3) | B.Bits('imm', 4) | B.Bits('funct', 2)
 
     def init_attrs(self):
         # :type int:
@@ -160,7 +162,6 @@ class Add(RType):
     funct = None  # TODO
 
     def alu_op(self, a, b):
-        # TODO take care of overflow?
         return a + b
 
 

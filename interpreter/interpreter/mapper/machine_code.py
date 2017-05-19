@@ -24,3 +24,8 @@ class Unused(Bits):
 
     def compose(self, env, value):
         return super().compose(env, 0)
+
+
+class Opcode(MachineCode):
+    def join(self, token, text):
+        return token + '_' + text
