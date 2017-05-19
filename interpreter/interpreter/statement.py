@@ -45,20 +45,23 @@ class Statement(metaclass=RegisterStatementFabric):
     @classmethod
     def new_instance(cls, src, instruction_id, env, text):
         obj = cls(instruction_id, env)
-        mapper = getattr(cls, src + '_mapper', None)
-        if mapper is None:
-            raise NotImplementedError('Mapper is not supported')
+        mapper = self.get_mapper(src)
         mapper.deserialize(env, text, obj)
         return obj
 
     def as_code(self, target):
-        mapper = getattr(self, target + '_mapper', None)
-        if mapper is None:
-            raise NotImplementedError('Mapper is not supported')
+        mapper = self.get_mapper(target)
         return mapper.serialize(self.env, self)
 
     def __repr__(self):
         return '<{} {}>'.format(type(self).__name__, self.mnemonic)
+
+    @classmethod
+    def get_mapper(cls, lang):
+        mapper = getattr(cls, lang + '_mapper', None)
+        if mapper is None:
+            raise NotImplementedError('Mapper is not supported')
+        return mapper
 
 
 class Label(Statement):
