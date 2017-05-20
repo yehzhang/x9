@@ -19,7 +19,7 @@
 # lwr r3
 
 # lw r1, 2
-mv r1, r5
+mov r1, r5
 sll r3
 
 

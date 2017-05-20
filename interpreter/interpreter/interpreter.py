@@ -1,6 +1,7 @@
 from .environment import Environment
 from .parser import Nano
 
+
 class Environmental:
     DEFAULT_CONFIG = {
         'reg_names':   [
@@ -33,11 +34,21 @@ class Environmental:
 
         self.env = Environment(self.config)
 
+class Callback:
+    def on_instruction_begin(self, inst, env):
+        pass
+
+    def on_instruction_end(self, inst, env):
+        pass
 
 class Interpreter(Environmental):
-    def __init__(self, config=None):
+    def __init__(self, config=None, callbacks=None):
+        """
+        :param List[Callback] callbacks:
+        """
         super().__init__(config)
         self.insts = None
+        self.callbacks = callbacks
 
     def load(self, filename):
         self.insts = Nano(filename, self.env).parse()
@@ -55,8 +66,15 @@ class Interpreter(Environmental):
                 break
 
             inst = self.insts[self.env.pc]
+
+            for cb in self.callbacks:
+                cb.on_instruction_begin(inst, self.env)
+
             inst.run()
 
             self.env.pc += 1
+
+            for cb in self.callbacks:
+                cb.on_instruction_end(inst, self.env)
 
         print(self.env)
