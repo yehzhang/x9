@@ -11,11 +11,11 @@
 #     add r1
 #     add r2
 
-# add r3
+ add r3
 # adc r3
 # sub r3
 
 # grab r0
 # get mem[r0]
-lwr r3
+#lwr r3
 
