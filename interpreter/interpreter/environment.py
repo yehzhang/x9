@@ -13,6 +13,7 @@ class Environment:
         # e.g. addr = luts[LoadWord.mnemonic][immediate]
         self.luts = defaultdict(dict)
         self.pc = 0
+        self.cout = 0
 
     def __str__(self):
         return '\n'.join([

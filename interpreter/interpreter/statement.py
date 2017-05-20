@@ -1,7 +1,5 @@
 from .mapper import asm as S, machine_code as B
 
-
-
 class RegisterStatementFabric(type):
     """Register classes of statements."""
     insts = {}
@@ -101,6 +99,7 @@ class RType(Instruction):
         self.rd = None
 
     def execute(self):
+        cout = 0 # cout is 0 unless add intruction
         alu_out = self.alu_op(self.registers.r0, self.registers.r1)
         # TODO take care of overflow
         self.registers[self.rd] = alu_out
@@ -158,15 +157,64 @@ class BType(Instruction):
         """
         raise NotImplementedError
 
+"""
+    Implementation of Instructions
+    Allow Assembly to Python Object Translation
 
+    RType: a => r0, b => r1
+
+"""
 class Add(RType):
     mnemonic = 'add'
-    opcode = None  # TODO
-    funct = None  # TODO
+    opcode = 0
+    funct = 0
 
     def alu_op(self, a, b):
-        return a + b
+        res = a + b
+        if(res > 255):
+            self.env.cout = 1
+            return res-256
+        return res
 
+class Adc(RType):
+    mnemonic = 'adc'
+    opcode = 0
+    funct = 1
+
+    def alu_op(self, a, b):
+        res = self.env.cout + a + b
+        if(res > 255):
+            self.env.cout = 1
+            return res-256
+        return res
+
+class Sub(RType):
+    mnemonic = 'sub'
+    opcode = 0
+    funct = 2
+
+    def alu_op(self, a, b):
+        return a-b
+
+# load word from register
+# r0 store an address, this address point to some value
+class Lwr(RType):
+    mnemonic = 'lwr'
+    opcode = 0
+    funct = 3
+
+    def alu_op(self, a, b):
+        return self.env.memory[a]
+
+# load word by immd
+class Lw(IType):
+    mnemonic = 'lw'
+    opcode = 1
+
+    def execute(self):
+        lut = self.env.luts[self.mnemonic]
+        address = lut[self.imm]
+        return self.env.memory[address]
 
 class ShiftRightArithmetic(RType):
     mnemonic = 'sra'
