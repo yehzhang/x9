@@ -11,7 +11,6 @@
 #     add r1
 #     add r2
 
-# add r3
 # adc r3
 # sub r3
 
@@ -28,4 +27,5 @@
 # or r3
 # halt r3
 # set r1, 8
+#lwr r3
 
