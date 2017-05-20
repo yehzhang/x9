@@ -27,7 +27,6 @@ class Environment:
 class Registers:
     def __init__(self, config):
         assert len(config['reg_names']) <= 16
-        assert 0 <= config['reg_default'] <= 0xff
 
         super().__setattr__('names', config['reg_names'])
 
