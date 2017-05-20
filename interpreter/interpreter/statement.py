@@ -176,7 +176,7 @@ class Add(RType):
             return res-256
         return res
 
-class Adc(RType):
+class AddCarryIn(RType):
     mnemonic = 'adc'
     opcode = 0
     funct = 1
@@ -188,7 +188,7 @@ class Adc(RType):
             return res-256
         return res
 
-class Sub(RType):
+class Subtract(RType):
     mnemonic = 'sub'
     opcode = 0
     funct = 2
@@ -196,9 +196,8 @@ class Sub(RType):
     def alu_op(self, a, b):
         return a-b
 
-# load word from register
 # r0 store an address, this address point to some value
-class Lwr(RType):
+class LoadWordFromRegister(RType):
     mnemonic = 'lwr'
     opcode = 0
     funct = 3
@@ -207,29 +206,114 @@ class Lwr(RType):
         return self.env.memory[a]
 
 # load word by immd
-class Lw(IType):
+# Notice: you can only load to r0 or r1
+class LoadWord(IType):
     mnemonic = 'lw'
     opcode = 1
 
     def execute(self):
         lut = self.env.luts[self.mnemonic]
         address = lut[self.imm]
-        return self.env.memory[address]
+        self.registers[self.rt] = self.env.memory[address]
 
-class ShiftRightArithmetic(RType):
-    mnemonic = 'sra'
-    opcode = None  # TODO
-    funct = None  # TODO
+# Notice: you can only use r0 or r1 for rt
+class StoreWord(IType):
+    mnemonic = 'sw'
+    opcode = 2
 
-    def alu_op(self, a, b):
-        # TODO
-        raise NotImplementedError
-
+    def execute(self):
+        lut = self.env.luts[self.mnemonic]
+        address = lut[self.imm]
+        self.env.memory[address] = self.registers[self.rt]
 
 class BranchEqual(BType):
     mnemonic = 'beq'
-    opcode = None  # TODO
-    funct = None  # TODO
+    opcode = 3
+    funct = 0
 
     def take_branch(self, a, b):
         return a == b
+
+class BranchNotEqual(BType):
+    mnemonic = 'bne'
+    opcode = 3
+    funct = 1
+
+    def take_branch(self, a, b):
+        return a != b
+
+class BranchGreaterThan(BType):
+    mnemonic = 'bgt'
+    opcode = 3
+    funct = 2
+
+    def take_branch(self, a, b):
+        return a > b
+
+class BranchLessThan(BType):
+    mnemonic = 'blt'
+    opcode = 3
+    funct = 3
+
+    def take_branch(self, a, b):
+        return a < b
+
+class Move(MType):
+    mnemonic = 'mv'
+    opcode = 4
+
+    def execute(self):
+        self.registers[self.rt] = self.registers[self.rs]
+
+# unsigned
+class ShiftLeftLogical(RType):
+    mnemonic = 'sll'
+    opcode = 5
+    funct = 0
+
+    def alu_op(self, a, b):
+        res = a << b
+        if(res > 255):
+            return res & 255
+        return res
+
+# signed
+class ShiftRightArithmetic(RType):
+    mnemonic = 'sra'
+    opcode = 5
+    funct = 1
+
+    def alu_op(self, a, b):
+        return a >> b
+
+class Negation(RType):
+    mnemonic = 'neg'
+    opcode = 6
+    funct = 0
+
+    def alu_op(self, a, b):
+        return ~a     
+
+class And(RType):
+    mnemonic = 'and'
+    opcode = 6
+    funct = 1
+
+    def alu_op(self, a, b):
+        return a&b
+
+class Or(RType):
+    mnemonic = 'or'
+    opcode = 6
+    funct = 2
+
+    def alu_op(self, a, b):
+        return a | b
+
+
+
+
+
+
+
+
