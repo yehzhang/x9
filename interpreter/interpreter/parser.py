@@ -31,10 +31,14 @@ class Nano:
                     label = cls.new_instance('asm', i_ln, self.env, s)
                     self.env.labels[label.name] = label
                 else:
-                    inst_asms.append((i_ln, s))
+                    inst_asms.append((i_ln, cls, s))
                     i_ln += 1
 
-            return [cls.new_instance('asm', i_ln, self.env, s) for (i_ln, s) in inst_asms]
+            insts = []
+            for (i_ln, cls, s) in inst_asms:
+                inst = cls.new_instance('asm', i_ln, self.env, s)
+                insts.append(inst)
+            return insts
         except Exception:
             raise SyntaxError('Invalid statement: ' + repr(s))
 

@@ -36,13 +36,16 @@ class TokenMapper:
 
     def get_attr_and_compose(self, env, obj):
         """ Getting attribute is skipped during serialization if attr is not specified. """
-        value = getattr(obj, self.src_attr, None)
-        if value is not None:
-            return value
+        if self.attr is None:
+            value = None
+        else:
+            value = getattr(obj, self.src_attr, None)
+            if value is not None:
+                return value
 
-        value = getattr(obj, self.attr, None)
-        if value is not None:
-            return self.compose(env, value)
+            value = getattr(obj, self.attr, None)
+
+        return self.compose(env, value)
 
     def tokenize(self, text):
         """
