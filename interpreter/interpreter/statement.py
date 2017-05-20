@@ -259,7 +259,7 @@ class BranchLessThan(BType):
         return a < b
 
 class Move(MType):
-    mnemonic = 'mv'
+    mnemonic = 'mov'
     opcode = 4
 
     def execute(self):

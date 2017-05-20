@@ -19,13 +19,13 @@
 # lwr r3
 
 # lw r1, 2
-# mv r1, r5
+# mov r1, r5
 # sll r3
 
 # neg r3
 # and r3
 # or r3
 # halt r3
-# set r1, 8
+set r1, 8
 #lwr r3
 
