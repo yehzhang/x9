@@ -310,10 +310,30 @@ class Or(RType):
     def alu_op(self, a, b):
         return a | b
 
+class Halt(RType):
+    mnemonic = 'halt'
+    opcode = 6  
+    funct = 3
 
+    def execute(self):
+        self.env.pc = float('inf')
 
+class Set(IType):
+    mnemonic = 'set'
+    opcode = 7
 
+    def execute(self):
+        self.registers[self.rt] = self.imm
 
+class Pseudo(Instruction):
+    pass
 
+class ShiftLeftLogicalCarryIn(Pseudo):
+    pass    
+# reg_l = reg_l >>> x
+# reg_l = reg_l | (reg_m << (8-x))
+# reg_m = regm >>> x
+class  ShiftLeftLogicalCarryIn(Pseudo):
+    pass
 
 

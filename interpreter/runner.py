@@ -4,7 +4,7 @@ from interpreter import Interpreter
 def main():
 
     CUSTOM_CONFIG = {
-       'reg_default': [2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       'reg_default': [1,2,0,0,0,9,0,0,0,0,0,0,0,0,0,0],
        'mem_default': 7
     }
     Interpreter(CUSTOM_CONFIG).load('../targets/adds.s').run()
