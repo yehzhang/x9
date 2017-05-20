@@ -1,8 +1,7 @@
 from .environment import Environment
 from .parser import Nano
 
-
-class Interpreter:
+class Environmental:
     DEFAULT_CONFIG = {
         'reg_names':   [
             'r0',
@@ -32,11 +31,15 @@ class Interpreter:
         new_config.update(config or {})
         self.config = new_config
 
-        self.env = None
+        self.env = Environment(self.config)
+
+
+class Interpreter(Environmental):
+    def __init__(self, config=None):
+        super().__init__(config)
         self.insts = None
 
     def load(self, filename):
-        self.env = Environment(self.config)
         self.insts = Nano(filename, self.env).parse()
         return self
 
