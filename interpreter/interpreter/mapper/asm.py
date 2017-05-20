@@ -45,9 +45,10 @@ class Immediate(Unaliasable):
 
 class LutKeyed(Immediate):
     def parse_unaliased(self, env, cls, word):
-        lut = env.luts[cls.mnemonic]
-        lut_value = self.parse_lut_value(word)
-        lut_key = lut.setdefault(lut_value, len(lut))
+        lut_value = self.parse_lut_value(env, cls, word)
+        acc_lut = env._acc_luts[cls.mnemonic]
+        lut_key = acc_lut.setdefault(lut_value, len(acc_lut))
+        env.luts[cls.mnemonic][lut_key] = lut_value
         return lut_key
 
     def parse_lut_value(self, env, cls, word):
@@ -72,7 +73,7 @@ class IntegerLiteral(Immediate):
         return int(word, 0)
 
 
-class MemoryAddressOrIntegerLiteral(TokenMapper):
+class MemoryAddressOrIntegerLiteral(Asm):
     """ Geez it perfectly demonstrates how twisted the ISA is. """
     def __init__(self, attr, bits):
         super().__init__(attr)

@@ -131,7 +131,7 @@ class BitConstrained(TokenMapper):
     def __init__(self, attr, bits):
         super().__init__(attr)
         self.bits = bits
-        self.upper_bound = bits ** 2
+        self.upper_bound = 2 ** bits
 
     def parse(self, env, cls, word):
         """

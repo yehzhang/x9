@@ -12,6 +12,7 @@ class Environment:
         # e.g. instruction_id = luts[BranchEqual.mnemonic][immediate]
         # e.g. addr = luts[LoadWord.mnemonic][immediate]
         self.luts = defaultdict(dict)
+        self._acc_luts = defaultdict(dict)
         self.pc = 0
         self.cout = 0
 
@@ -148,7 +149,7 @@ def convert_to_unsigned_integer(value, size):
     """
     upper_bound = 2 ** size
     if not (-upper_bound // 2 <= value < upper_bound):
-        msg = '{} is out of range of {} bytes'.format(value, size)
+        msg = '{} is out of range of {} bits'.format(value, size)
         raise ValueError(msg)
     all_f_mask = upper_bound - 1
     return value & all_f_mask
