@@ -45,7 +45,7 @@ class Statement(metaclass=RegisterStatementFabric):
     @classmethod
     def new_instance(cls, src, instruction_id, env, text):
         obj = cls(instruction_id, env)
-        mapper = self.get_mapper(src)
+        mapper = cls.get_mapper(src)
         mapper.deserialize(env, text, obj)
         return obj
 

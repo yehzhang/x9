@@ -2,8 +2,8 @@ from .mapper import TokenMapper
 
 
 class MachineCode(TokenMapper):
-    def __init__(self, attr, bits, underscore=True):
-        super().__init__(attr, bits)
+    def __init__(self, attr, underscore=True):
+        super().__init__(attr)
         self.sep = '_' if underscore else ''
 
     def join(self, token, text):
