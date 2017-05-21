@@ -1,5 +1,6 @@
 from .mapper import asm as S, machine_code as B
 
+
 class RegisterStatementFabric(type):
     """Register classes of statements."""
     insts = {}
@@ -37,7 +38,9 @@ class Statement(metaclass=RegisterStatementFabric):
         self.init_attrs()
 
     def init_attrs(self):
-        """ Subclasses overwrites this method to initialize attributes. """
+        """ Subclasses overwrites this method to initialize attributes for readability when using
+        mappers to set attributes.
+        """
         raise NotImplementedError
 
     @classmethod
@@ -99,7 +102,7 @@ class RType(Instruction):
         self.rd = None
 
     def execute(self):
-        cout = 0 # cout is 0 unless add intruction
+        self.env.cout = 0  # cout is 0 unless add intruction
         alu_out = self.alu_op(self.registers.r0, self.registers.r1)
         # TODO take care of overflow
         self.registers[self.rd] = alu_out
@@ -157,6 +160,7 @@ class BType(Instruction):
         """
         raise NotImplementedError
 
+
 """
     Implementation of Instructions
     Allow Assembly to Python Object Translation
@@ -164,6 +168,8 @@ class BType(Instruction):
     RType: a => r0, b => r1
 
 """
+
+
 class Add(RType):
     mnemonic = 'add'
     opcode = 0
@@ -171,10 +177,11 @@ class Add(RType):
 
     def alu_op(self, a, b):
         res = a + b
-        if(res > 255):
+        if res > 255:
             self.env.cout = 1
-            return res-256
+            return res - 256
         return res
+
 
 class AddCarryIn(RType):
     mnemonic = 'adc'
@@ -183,10 +190,11 @@ class AddCarryIn(RType):
 
     def alu_op(self, a, b):
         res = self.env.cout + a + b
-        if(res > 255):
+        if res > 255:
             self.env.cout = 1
-            return res-256
+            return res - 256
         return res
+
 
 class Subtract(RType):
     mnemonic = 'sub'
@@ -194,7 +202,8 @@ class Subtract(RType):
     funct = 2
 
     def alu_op(self, a, b):
-        return a-b
+        return a - b
+
 
 # r0 store an address, this address point to some value
 class LoadWordFromRegister(RType):
@@ -205,7 +214,7 @@ class LoadWordFromRegister(RType):
     def alu_op(self, a, b):
         return self.env.memory[a]
 
-# load word by immd
+
 # Notice: you can only load to r0 or r1
 class LoadWord(IType):
     mnemonic = 'lw'
@@ -215,6 +224,7 @@ class LoadWord(IType):
         lut = self.env.luts[self.mnemonic]
         address = lut[self.imm]
         self.registers[self.rt] = self.env.memory[address]
+
 
 # Notice: you can only use r0 or r1 for rt
 class StoreWord(IType):
@@ -226,6 +236,7 @@ class StoreWord(IType):
         address = lut[self.imm]
         self.env.memory[address] = self.registers[self.rt]
 
+
 class BranchEqual(BType):
     mnemonic = 'beq'
     opcode = 3
@@ -233,6 +244,7 @@ class BranchEqual(BType):
 
     def take_branch(self, a, b):
         return a == b
+
 
 class BranchNotEqual(BType):
     mnemonic = 'bne'
@@ -242,6 +254,7 @@ class BranchNotEqual(BType):
     def take_branch(self, a, b):
         return a != b
 
+
 class BranchGreaterThan(BType):
     mnemonic = 'bgt'
     opcode = 3
@@ -249,6 +262,7 @@ class BranchGreaterThan(BType):
 
     def take_branch(self, a, b):
         return a > b
+
 
 class BranchLessThan(BType):
     mnemonic = 'blt'
@@ -258,12 +272,14 @@ class BranchLessThan(BType):
     def take_branch(self, a, b):
         return a < b
 
+
 class Move(MType):
     mnemonic = 'mov'
     opcode = 4
 
     def execute(self):
         self.registers[self.rt] = self.registers[self.rs]
+
 
 # unsigned
 class ShiftLeftLogical(RType):
@@ -273,9 +289,10 @@ class ShiftLeftLogical(RType):
 
     def alu_op(self, a, b):
         res = a << b
-        if(res > 255):
+        if res > 255:
             return res & 255
         return res
+
 
 # signed
 class ShiftRightArithmetic(RType):
@@ -286,13 +303,15 @@ class ShiftRightArithmetic(RType):
     def alu_op(self, a, b):
         return a >> b
 
+
 class Negation(RType):
     mnemonic = 'neg'
     opcode = 6
     funct = 0
 
     def alu_op(self, a, b):
-        return ~a     
+        return ~a
+
 
 class And(RType):
     mnemonic = 'and'
@@ -300,7 +319,8 @@ class And(RType):
     funct = 1
 
     def alu_op(self, a, b):
-        return a&b
+        return a & b
+
 
 class Or(RType):
     mnemonic = 'or'
@@ -310,13 +330,18 @@ class Or(RType):
     def alu_op(self, a, b):
         return a | b
 
+
 class Halt(RType):
     mnemonic = 'halt'
-    opcode = 6  
+    opcode = 6
     funct = 3
 
     def execute(self):
         self.env.pc = float('inf')
+
+    def alu_op(self, a, b):
+        pass
+
 
 class Set(IType):
     mnemonic = 'set'
@@ -324,16 +349,4 @@ class Set(IType):
 
     def execute(self):
         self.registers[self.rt] = self.imm
-
-class Pseudo(Instruction):
-    pass
-
-class ShiftLeftLogicalCarryIn(Pseudo):
-    pass    
-# reg_l = reg_l >>> x
-# reg_l = reg_l | (reg_m << (8-x))
-# reg_m = regm >>> x
-class  ShiftLeftLogicalCarryIn(Pseudo):
-    pass
-
 

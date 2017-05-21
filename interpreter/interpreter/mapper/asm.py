@@ -75,6 +75,7 @@ class IntegerLiteral(Immediate):
 
 class MemoryAddressOrIntegerLiteral(Asm):
     """ Geez it perfectly demonstrates how twisted the ISA is. """
+
     def __init__(self, attr, bits):
         super().__init__(attr)
         self.mem_addr_mapper = MemoryAddress(attr, bits)

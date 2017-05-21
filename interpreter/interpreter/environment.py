@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 class Environment:
     def __init__(self, config):
         self.registers = Registers(config)
@@ -13,6 +14,7 @@ class Environment:
         # e.g. addr = luts[LoadWord.mnemonic][immediate]
         self.luts = defaultdict(dict)
         self._acc_luts = defaultdict(dict)
+        # :type int: not a genuine register
         self.pc = 0
         self.cout = 0
 

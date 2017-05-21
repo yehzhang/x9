@@ -1,6 +1,8 @@
-from .parser import Nano
-from .interpreter import Environmental
 import os.path
+
+from .interpreter import Environmental
+from .parser import Nano
+
 
 class Assembler(Environmental):
     def __init__(self, config=None):
@@ -11,9 +13,8 @@ class Assembler(Environmental):
         self.insts = Nano(filename, self.env).parse()
         return self
 
-
     def run(self, out_dir):
-        ''' execute instructions '''
+        """ execute instructions """
         if self.insts is None:
             raise RuntimeError('Assembly file is not loaded')
         if out_dir is None:
@@ -25,12 +26,10 @@ class Assembler(Environmental):
 
         self.save(m_code, out_dir)
 
-
     def save(self, m_code, dir):
-        ''' save machine code to specific location '''
+        """ save machine code to specific location """
         tbs = '\n'.join(m_code)
         save_path = os.path.join(dir, 'machine_code.txt')
         file = open(save_path, 'w')
         file.write(tbs)
         file.close()
-

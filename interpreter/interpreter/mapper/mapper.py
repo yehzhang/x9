@@ -3,7 +3,7 @@ from ..environment import convert_to_unsigned_integer
 
 class TokenMapper:
     """ Map a token in a language to a Python value.
-    :param str attr: The name of an attribute of an object mapped with this token.
+    :param str|None attr: The name of an attribute of an object mapped with this token.
         If None, the object is unmodified during deserialization and nothing is produced during
         serialization.
     """

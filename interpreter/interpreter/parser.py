@@ -22,6 +22,7 @@ class Nano:
         # Parse, instantiate, and check statements
         inst_asms = []
         i_ln = 0
+        s = None
         try:
             for s in s_sec:
                 mne, _ = s.split(maxsplit=1)
