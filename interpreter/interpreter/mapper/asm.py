@@ -8,9 +8,6 @@ class Asm(TokenMapper):
             segments.append('')
         return segments
 
-    def join(self, token, text):
-        return token + ', ' + text
-
 
 class Id(Asm):
     def parse(self, env, cls, word):
@@ -22,7 +19,12 @@ class Mnemonic(Id):
         return token + ' ' + text
 
 
-class Unaliasable(Asm, BitConstrained):
+class Operand(Asm):
+    def join(self, token, text):
+        return token + ', ' + text
+
+
+class Unaliasable(Operand, BitConstrained):
     def parse_constrained(self, env, cls, word):
         word = env.unalias(word)
         return self.parse_unaliased(env, cls, word)
@@ -73,7 +75,7 @@ class IntegerLiteral(Immediate):
         return int(word, 0)
 
 
-class MemoryAddressOrIntegerLiteral(Asm):
+class MemoryAddressOrIntegerLiteral(Operand):
     """ Geez it perfectly demonstrates how twisted the ISA is. """
 
     def __init__(self, attr, bits):
