@@ -21,7 +21,7 @@ module ALU(
       ALU_AND:  out = a & b;
       ALU_OR:   out = a | b;
       ALU_NEG:  out = ~a;
-      ALU_GT:   out = a > b;
+      ALU_LTS:  out = $signed(a) < $signed(b);
       ALU_LT:   out = a < b;
       default: out = 0;
     endcase

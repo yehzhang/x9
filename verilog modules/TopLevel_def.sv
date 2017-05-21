@@ -14,7 +14,7 @@ package TopLevel_def;
 
     parameter FUN_BEQ = 0;
     parameter FUN_BNE = 1;
-    parameter FUN_BGT = 2;
+    parameter FUN_BLTS = 2;
     parameter FUN_BLT = 3;
 
     parameter FUN_ADD = 0;

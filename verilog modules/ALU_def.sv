@@ -9,7 +9,7 @@ package ALU_def;
         ALU_OR,
         ALU_NEG,
         ALU_AND,
-        ALU_GT,
+        ALU_LTS,
         ALU_LT,
         ALU_SRL
     } ALU_CTRL;

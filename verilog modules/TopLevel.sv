@@ -124,7 +124,7 @@ module TopLevel(
             B_BEQ: unique case (funct)
                 FUN_BEQ: ctrl_lut_type = LUT_BEQ;
                 FUN_BNE: ctrl_lut_type = LUT_BNE;
-                FUN_BGT: ctrl_lut_type = LUT_BGT;
+                FUN_BLTS: ctrl_lut_type = LUT_BLTS;
                 FUN_BLT: ctrl_lut_type = LUT_BLT;
             endcase
         endcase
@@ -156,7 +156,7 @@ module TopLevel(
             B_BEQ: unique case (funct)
                 FUN_BEQ: ctrl_alu_input = ALU_SUB;
                 FUN_BNE: ctrl_alu_input = ALU_SUB;
-                FUN_BGT: ctrl_alu_input = ALU_GT;
+                FUN_BLTS: ctrl_alu_input = ALU_LTS;
                 FUN_BLT: ctrl_alu_input = ALU_LT;
             endcase
         endcase
@@ -167,7 +167,7 @@ module TopLevel(
             unique case (funct)
                 FUN_BEQ: take_branch = alu_zero;
                 FUN_BNE: take_branch = ~alu_zero;
-                FUN_BGT: take_branch = alu_out;
+                FUN_BLTS: take_branch = alu_out;
                 FUN_BLT: take_branch = alu_out;
             endcase
         end

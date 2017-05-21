@@ -1,3 +1,4 @@
+from .environment import convert_to_signed_integer
 from .mapper import asm as S, machine_code as B
 
 
@@ -150,8 +151,8 @@ class BType(Instruction):
 
     def take_branch(self, a, b):
         """
-        :param int a:
-        :param int b:
+        :param int a: Signed
+        :param int b: Signed
         :return bool:
         """
         raise NotImplementedError
@@ -251,13 +252,13 @@ class BranchNotEqual(BType):
         return a != b
 
 
-class BranchGreaterThan(BType):
-    mnemonic = 'bgt'
+class BranchLessThanSigned(BType):
+    mnemonic = 'blts'
     opcode = 3
     funct = 2
 
     def take_branch(self, a, b):
-        return a > b
+        return convert_to_signed_integer(a, 8) < convert_to_signed_integer(b, 8)
 
 
 class BranchLessThan(BType):
@@ -297,8 +298,7 @@ class ShiftRightArithmetic(RType):
     funct = 1
 
     def alu_op(self, a, b):
-        # TODO need to sign-ext
-        return a >> b
+        return convert_to_signed_integer(a) >> b
 
 
 class ShiftRightLogical(RType):

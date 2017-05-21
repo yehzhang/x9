@@ -8,8 +8,8 @@ package LUT_def;
         LUT_SW = 0,
         LUT_BNE = 0,
         LUT_BEQ = 0,
+        LUT_BLTS = 0,
         LUT_BLT = 0,
-        LUT_BGT = 0,
     } LUT_TYPE;
 
     // LUT[opcode][imm] => value
