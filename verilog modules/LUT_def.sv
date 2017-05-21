@@ -2,12 +2,17 @@
 // parameters used in the LUT
 package LUT_def;
     // LUT index
-    const logic [2:0] kLutNone = 3'b000;
-    const logic [2:0] kLutBeq  = 3'b001;
-    const logic [2:0] kLutBne  = 3'b010;
-    const logic [2:0] kLutBlt  = 3'b011;
-    const logic [2:0] kLutBgt  = 3'b100;
-    const logic [2:0] kLutLw   = 3'b101;
-    const logic [2:0] kLutSw   = 3'b110;
+    // Generated
+    typedef enum logic[2:0] {
+        LUT_LW = 0,
+        LUT_SW = 0,
+        LUT_BNE = 0,
+        LUT_BEQ = 0,
+        LUT_BLT = 0,
+        LUT_BGT = 0,
+    } LUT_TYPE;
+
+    // LUT[opcode][imm] => value
+    const logic[7:0] kLookupTable[2:0][4:0];  // = '{'{}}
 
 endpackage
