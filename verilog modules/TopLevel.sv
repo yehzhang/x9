@@ -144,6 +144,7 @@ module TopLevel(
             R_SHF: unique case (funct)
                 FUN_SLL: ctrl_alu_input = ALU_SLL;
                 FUN_SRA: ctrl_alu_input = ALU_SRA;
+                FUN_SRL: ctrl_alu_input = ALU_SRL;
                 default:; // nothing
             endcase
             R_NEG: unique case (funct)

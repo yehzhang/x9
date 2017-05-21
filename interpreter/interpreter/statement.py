@@ -1,3 +1,4 @@
+from .environment import convert_to_unsigned_integer
 from .mapper import asm as S, machine_code as B
 
 
@@ -302,6 +303,15 @@ class ShiftRightArithmetic(RType):
 
     def alu_op(self, a, b):
         return a >> b
+
+
+class ShiftRightLogical(RType):
+    mnemonic = 'srl'
+    opcode = 5
+    funct = 2
+
+    def alu_op(self, a, b):
+        return convert_to_unsigned_integer(a, 8) >> b
 
 
 class Negation(RType):

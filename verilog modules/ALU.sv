@@ -17,6 +17,7 @@ module ALU(
       ALU_SUB:  out = a - b;
       ALU_SLL:  out = a << b;
       ALU_SRA:  out = a >> b;
+      ALU_SRL:  out = a >>> b;
       ALU_AND:  out = a & b;
       ALU_OR:   out = a | b;
       ALU_NEG:  out = ~a;

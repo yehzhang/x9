@@ -24,6 +24,7 @@ package TopLevel_def;
 
     parameter FUN_SLL = 0;
     parameter FUN_SRA = 1;
+    parameter FUN_SRL = 2;
 
     parameter FUN_NEG = 0;
     parameter FUN_AND = 1;
