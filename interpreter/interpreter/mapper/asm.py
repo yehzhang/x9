@@ -64,6 +64,10 @@ class LabelReference(LutKeyed):
             raise ValueError('Label name not found')
         return label.instruction_id
 
+    def get_attr_and_compose(self, env, obj):
+        value = super().get_attr_and_compose(env, obj)
+        return value + ':'
+
 
 class MemoryAddress(LutKeyed):
     def parse_lut_value(self, env, cls, word):
