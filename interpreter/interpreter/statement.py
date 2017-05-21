@@ -1,4 +1,3 @@
-from .environment import convert_to_unsigned_integer
 from .mapper import asm as S, machine_code as B
 
 
@@ -13,9 +12,6 @@ class RegisterStatementFabric(type):
         if ref_name is not None:
             if ref_name not in mcs.insts:
                 mcs.insts[ref_name] = cls
-
-                # TODO Sanity check of duplicate (opcode, funct)?
-
         return cls
 
     @classmethod
@@ -105,7 +101,6 @@ class RType(Instruction):
     def execute(self):
         self.env.cout = 0  # cout is 0 unless add intruction
         alu_out = self.alu_op(self.registers.r0, self.registers.r1)
-        # TODO take care of overflow
         self.registers[self.rd] = alu_out
 
     def alu_op(self, a, b):
@@ -302,6 +297,7 @@ class ShiftRightArithmetic(RType):
     funct = 1
 
     def alu_op(self, a, b):
+        # TODO need to sign-ext
         return a >> b
 
 
@@ -311,7 +307,7 @@ class ShiftRightLogical(RType):
     funct = 2
 
     def alu_op(self, a, b):
-        return convert_to_unsigned_integer(a, 8) >> b
+        return a >> b
 
 
 class Negation(RType):
