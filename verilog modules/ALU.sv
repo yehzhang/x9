@@ -12,14 +12,16 @@ module ALU(
   always_comb begin
     cout = 0;
     unique case (ctrl_input)
-      ADD:  {cout, out} = a + b;
-      ADDC: {cout, out} = a + b + cin;
-      SUB:  out = a - b;
-      SLL:  out = a << b;
-      SRA:  out = a >> b;
-      AND:  out = a & b;
-      OR:   out = a | b;
-      NEG:  out = ~a;
+      ALU_ADD:  {cout, out} = a + b;
+      ALU_ADDC: {cout, out} = a + b + cin;
+      ALU_SUB:  out = a - b;
+      ALU_SLL:  out = a << b;
+      ALU_SRA:  out = a >> b;
+      ALU_AND:  out = a & b;
+      ALU_OR:   out = a | b;
+      ALU_NEG:  out = ~a;
+      ALU_GT:   out = a > b;
+      ALU_LT:   out = a < b;
       default: out = 0;
     endcase
     zero = out == 0;
