@@ -350,3 +350,136 @@ class Set(IType):
     def execute(self):
         self.registers[self.rt] = self.imm
 
+
+class Pseudo(Instruction):
+    asm_template = None
+
+    def __init__(self, instruction_id, env):
+        super().__init__(instruction_id, env)
+        self.insts = []
+
+    def execute(self):
+        for inst in self.insts:
+            inst.execute()
+        self.env.execution_count -= 1
+
+    @classmethod
+    def new_instance(cls, src, instruction_id, env, text):
+        obj = super().new_instance(src, instruction_id, env, text)
+        assert isinstance(obj, cls)
+
+        # Replace tokens
+        mappers = cls.get_mapper(src).mappers
+        repls = {m.attr: getattr(obj, m.src_attr) for m in mappers if m.attr is not None}
+        template = getattr(cls, src + '_template')
+        text = template.format(**repls)
+
+        # New instructions
+        for s in text.splitlines():
+            mne, _ = s.split(maxsplit=1)
+            s_cls = RegisterStatementFabric.get(mne)
+            inst = s_cls.new_instance(src, None, env, s)
+            obj.insts.append(inst)
+
+        return obj
+
+    def as_code(self, target):
+        return '\n'.join(inst.as_code(target) for inst in self.insts)
+
+
+class ShiftCarry(Pseudo):
+    asm_mapper = S.Mnemonic('mnemonic') | S.Register('reg_m', 4) | S.Register(
+        'reg_l', 4) | S.IntegerLiteral('shamt', 3)
+
+    def init_attrs(self):
+        self.reg_m = None
+        self.reg_l = None
+        self.shamt = None
+
+
+class ShiftRightLogicalCarry(ShiftCarry):
+    """ Using registers: r0, r1, r2
+
+    RTL
+        reg_l = reg_l >>> shamt
+        reg_l = reg_l | (reg_m << (8 - shamt))
+        reg_m = reg_m >>> shamt
+
+    x9
+        # reg_l >>> shamt
+        mov r0, reg_l
+        set r1, shamt
+        srl r2
+        # 8 - shamt
+        set r0, 8
+        sub r1
+        # reg_m << (8 - shamt)
+        mov r0, reg_m
+        sll r1
+        # reg_l = reg_l | (reg_m << (8 - shamt))
+        mov r0, r2
+        or reg_l
+        # reg_m = reg_m >>> shamt
+        mov r0, reg_m
+        set r1, shamt
+        srl reg_m
+    """
+    mnemonic = 'srlc'
+    asm_template = '''\
+        mov r0 {reg_l}
+        set r1 {shamt}
+        srl r2
+        set r0 8
+        sub r1
+        mov r0 {reg_m}
+        sll r1
+        mov r0 r2
+        or {reg_l}
+        mov r0 {reg_m}
+        set r1 {shamt}
+        srl {reg_m}
+    '''
+
+
+class ShiftLeftLogicalCarry(ShiftCarry):
+    """ Using registers: r0, r1, r2
+
+    RTL
+        reg_m = reg_m << shamt
+        reg_m = reg_m | (reg_l >>> (8 - shamt))
+        reg_l = reg_l << shamt
+
+    x9
+        # reg_m << shamt
+        mov r0, reg_m
+        set r1, shamt
+        sll r2
+        # 8 - shamt
+        set r0, 8
+        sub r1
+        # reg_l >>> (8 - shamt)
+        mov r0, reg_l
+        srl r1
+        # reg_m = reg_m | (reg_l >>> (8 - shamt))
+        mov r0, r2
+        or reg_m
+        # reg_l = reg_l << shamt
+        mov r0, reg_l
+        set r1, shamt
+        sll reg_l
+    """
+    mnemonic = 'sllc'
+    asm_template = '''\
+        mov r0 {reg_m}
+        set r1 {shamt}
+        sll r2
+        set r0 8
+        sub r1
+        mov r0 {reg_l}
+        srl r1
+        mov r0 r2
+        or {reg_m}
+        mov r0 {reg_l}
+        set r1 {shamt}
+        sll {reg_l}
+    '''
