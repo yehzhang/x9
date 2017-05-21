@@ -4,6 +4,7 @@ module IF_tb #(parameter A=4);
     bit start;
     bit ctrl_branch;
     bit take_branch;
+    bit [A-1:0] inst_addr_reset; // used by reset
     bit [A-1:0] inst_addr_in; // used by branch or reset
     bit halt;
 
@@ -33,6 +34,7 @@ module IF_tb #(parameter A=4);
 
         // Local init
         start = 1;
+        inst_addr_reset = 0;
         inst_addr_in = 0;
         #10ns;
         start = 0;
