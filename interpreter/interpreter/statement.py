@@ -382,7 +382,7 @@ class Pseudo(Instruction):
 
         # New instructions
         for s in text.splitlines():
-            mne, _ = s.split(maxsplit=1)
+            mne, _ = s.strip().split(maxsplit=1)
             s_cls = RegisterStatementFabric.get(mne)
             inst = s_cls.new_instance(src, None, env, s)
             obj.insts.append(inst)
@@ -446,6 +446,13 @@ class ShiftRightLogicalCarry(ShiftCarry):
         srl {reg_m}
     '''
 
+    def execute(self):
+        reg_m = self.registers[self.reg_m]
+        reg_l = self.registers[self.reg_l]
+        reg_l = reg_m >>> self.shamt
+        self.registers[self.reg_l] = reg_l | (reg_m << (8 - self.shamt))
+        self.registers[self.reg_m] = reg_m >>> self.shamt
+
 
 class ShiftLeftLogicalCarry(ShiftCarry):
     """ Using registers: r0, r1, r2
@@ -489,3 +496,10 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         set r1 {shamt}
         sll {reg_l}
     '''
+
+    def execute(self):
+        reg_m = self.registers[self.reg_m]
+        reg_l = self.registers[self.reg_l]
+        reg_m = reg_m << self.shamt
+        self.registers[self.reg_m] = reg_m | (reg_l >>> (8 - self.shamt))
+        self.registers[self.reg_l] = reg_l << self.shamt
