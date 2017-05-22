@@ -484,7 +484,7 @@ class ShiftLeftLogicalCarry(ShiftCarry):
     mnemonic = 'sllc'
     asm_template = '''\
         mov r0 {reg_m}
-        set r1 {shamt}
+        mov r1 {shamt}
         sll r2
         set r0 8
         sub r1
@@ -493,7 +493,7 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         mov r0 r2
         or {reg_m}
         mov r0 {reg_l}
-        set r1 {shamt}
+        mov r1 {shamt}
         sll {reg_l}
     '''
 
