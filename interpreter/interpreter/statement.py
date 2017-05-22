@@ -395,7 +395,7 @@ class Pseudo(Instruction):
 
 class ShiftCarry(Pseudo):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('reg_m', 4) | S.Register(
-        'reg_l', 4) | S.IntegerLiteral('shamt', 3)
+        'reg_l', 4) | S.Register('shamt', 4)
 
     def init_attrs(self):
         self.reg_m = None
@@ -433,7 +433,7 @@ class ShiftRightLogicalCarry(ShiftCarry):
     mnemonic = 'srlc'
     asm_template = '''\
         mov r0 {reg_l}
-        set r1 {shamt}
+        mov r1 {shamt}
         srl r2
         set r0 8
         sub r1
@@ -442,7 +442,7 @@ class ShiftRightLogicalCarry(ShiftCarry):
         mov r0 r2
         or {reg_l}
         mov r0 {reg_m}
-        set r1 {shamt}
+        mov r1 {shamt}
         srl {reg_m}
     '''
 
