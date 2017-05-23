@@ -316,7 +316,8 @@ class Negation(RType):
     funct = 0
 
     def alu_op(self, a, b):
-        return ~a
+        temp = 0xFF
+        return a ^ temp
 
 
 class And(RType):
@@ -443,15 +444,13 @@ class ShiftRightLogicalCarry(ShiftCarry):
         or {reg_l}
         mov r0 {reg_m}
         mov r1 {shamt}
-        srl {reg_m}
-    '''
-
+        srl {reg_m}'''
     def execute(self):
         reg_m = self.registers[self.reg_m]
         reg_l = self.registers[self.reg_l]
-        reg_l = reg_m >>> self.shamt
+        reg_l = reg_m >> self.shamt
         self.registers[self.reg_l] = reg_l | (reg_m << (8 - self.shamt))
-        self.registers[self.reg_m] = reg_m >>> self.shamt
+        self.registers[self.reg_m] = reg_m >> self.shamt
 
 
 class ShiftLeftLogicalCarry(ShiftCarry):
@@ -494,12 +493,10 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         or {reg_m}
         mov r0 {reg_l}
         mov r1 {shamt}
-        sll {reg_l}
-    '''
-
+        sll {reg_l}'''
     def execute(self):
         reg_m = self.registers[self.reg_m]
         reg_l = self.registers[self.reg_l]
         reg_m = reg_m << self.shamt
-        self.registers[self.reg_m] = reg_m | (reg_l >>> (8 - self.shamt))
+        self.registers[self.reg_m] = reg_m | (reg_l >> (8 - self.shamt))
         self.registers[self.reg_l] = reg_l << self.shamt
