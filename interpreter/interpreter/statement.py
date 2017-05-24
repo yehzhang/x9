@@ -503,8 +503,8 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         reg_l = self.registers[self.reg_l]
         shamt = self.registers[self.shamt]
         reg_m = reg_m << shamt
-        if 8-shamt<0:
-            self.registers[self.reg_mr] = 0
+        if 8-shamt<=0:
+            self.registers[self.reg_mr] = (reg_m | (reg_l << (shamt - 8))) & 0xFF
         else:
             self.registers[self.reg_mr] = (reg_m | (reg_l >> (8 - shamt))) & 0xFF
         self.registers[self.reg_lr] = (reg_l << shamt) & 0xFF
