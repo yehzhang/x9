@@ -60,6 +60,7 @@ int main()
             } 
         }
         if(divident_neg != divisor_neg){
+            printf("H5\n");
             quotient = ~quotient + 1; //1 is 1 bit;
         }
     }

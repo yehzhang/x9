@@ -143,13 +143,14 @@ FOR_LOOP_START:
     # int shift = 15 - i;
     set r0, FIFTEEN
     mov r1, i
-    sub temp3 # shift_LSB
+    sub temp3 # shift_LSB   # good
     set r0, 0
     set r1, 0 
     add temp2 # shift_MSB
     # shift = divident_temp >> shift;
-    srlc divident_temp_MSW, divident_temp_LSW, temp3, r0, r1
+    srlc divident_temp_MSW, divident_temp_LSW, temp3, r0, r2
     # shift = shift & 1;
+    mov r1, r2
     set r0, 1
     and temp3
     set r0, 0
@@ -234,6 +235,7 @@ THIRD_ELSE:
     mov r1, i
     bne FOR_LOOP_START
 
+    # end of for loop
     # if(divident_neg != divisor_neg){
     mov r0, divident_neg
     mov r1, divisor_neg
