@@ -37,13 +37,13 @@ always_comb begin
     //  t_temp = t_temp - 4096;
     //else if(t_temp < -2048)
     //  t_temp = t_temp + 4096;
-    t = t_temp; 
+    t = t_temp;
 end
 */
 #include <stdio.h>
 int main(){
-    int x = 3000; //store in location 1(MSW), 2(LSW)
-    int y = 4000; //store in location 3(MSW), 4(LSW)
+    int x = 300; //store in location 1(MSW), 2(LSW)
+    int y = 400; //store in location 3(MSW), 4(LSW)
     int x_new, y_new, t_new;
 
     int t = 0<<11; //12 bits
