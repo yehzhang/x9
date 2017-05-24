@@ -65,9 +65,9 @@ int main(){
         t = t_new;
     }
 
-    float radian = x; //store to location 5(MSW), 6(LSW)
-    float theta = t; //store to location 7(MSW), 8(LSW)
-    printf("%f\n", radian);
-    printf("%f\n", theta);
+    int radian = x; //store to location 5(MSW), 6(LSW)
+    int theta = t; //store to location 7(MSW), 8(LSW)
+    printf("%d\n", radian);
+    printf("%d\n", theta);
 
 }
