@@ -286,8 +286,9 @@ class ShiftLeftLogical(RType):
     funct = 0
 
     def alu_op(self, a, b):
+        b = convert_to_signed_integer(b, 8)
         if b<0:
-            res = a>>b
+            res = a>> -b
         else:
             res = a << b
         if res > 255:
@@ -302,9 +303,10 @@ class ShiftRightArithmetic(RType):
     funct = 1
 
     def alu_op(self, a, b):
-        a = convert_to_signed_integer(a)
+        a = convert_to_signed_integer(a, 8)
+        b = convert_to_signed_integer(b, 8)
         if b<0:
-            res = a << b
+            res = a << -b
         else:
             res = a >> b
         if res > 255:
@@ -318,8 +320,9 @@ class ShiftRightLogical(RType):
     funct = 2
 
     def alu_op(self, a, b):
+        b = convert_to_signed_integer(b, 8)
         if b<0:
-            res = a << b
+            res = a << -b
         else:
             res = a >> b
         if res > 255:
