@@ -86,6 +86,7 @@ IF_ONLY:
       mov r0, r2 # add y1+((-x)>>i)'s MSB
       adc y1
 
+      # add r15
 
       #t_new = t + (1<<(11-i));
       set r0, 11
@@ -98,21 +99,6 @@ IF_ONLY:
       set r0, 1
       add temp
 
-      add r15
-      # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-      # mov r0, temp2
-      #   mov r1, temp1
-      #   sll r2
-      #   set r0, 8
-      #   sub r1
-      #   mov r0, temp
-      #   srl r1
-      #   mov r0, r2
-      #   or r2
-      #   mov r0, temp
-      #   mov r1, temp1
-      #   sll temp
-      # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
       sllc temp2, temp, temp1, r2, temp # 0,1<<(11-i)
 
@@ -123,7 +109,10 @@ IF_ONLY:
       mov r0, r2
       adc t1
 
+      # add r15
       # go to assign parts
+      set r0, 0
+      set r1, 0
       beq ASSIGN:
 
 ELSE_ONLY:
@@ -132,7 +121,7 @@ ELSE_ONLY:
       neg r0  #r0 = -y2
       set r1, 1
       add temp2 # temp2 = -x2+1
-      mov r0, x1
+      mov r0, y1
       neg r0 # r0 = -y1
       set r1, 0
       add temp1 # temp1 = -x1+carru
@@ -204,7 +193,11 @@ ASSIGN:
       sw r0, 3
       sw r1, 4
 
+      # add r15
+
       # go back to for loop
+      set r0, 0
+      set r1, 0
       beq FORLOOP:
 
 END:

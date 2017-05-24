@@ -10,7 +10,7 @@ class Debugger(Callback):
     def on_instruction_end(self, inst, env):
         text = str(inst)
         print(text)
-        if text in ('add r15', 'adc t1'):
+        if text in ('add r15'):
             print(env)
             set_trace()
             pass

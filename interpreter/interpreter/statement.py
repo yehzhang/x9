@@ -467,7 +467,7 @@ class ShiftRightLogicalCarry(ShiftCarry):
         or {reg_lr}
         mov r0 {reg_m}
         mov r1 {shamt}
-        srl {reg_mr}'''
+        sra {reg_mr}'''
 
 
 class ShiftLeftLogicalCarry(ShiftCarry):
