@@ -100,7 +100,6 @@ class RType(Instruction):
         self.rd = None
 
     def execute(self):
-        self.env.cout = 0  # cout is 0 unless add intruction
         alu_out = self.alu_op(self.registers.r0, self.registers.r1)
         self.registers[self.rd] = alu_out
 
@@ -177,6 +176,7 @@ class Add(RType):
         if res > 255:
             self.env.cout = 1
             return res - 256
+        self.env.cout = 0
         return res
 
 
@@ -190,6 +190,7 @@ class AddCarryIn(RType):
         if res > 255:
             self.env.cout = 1
             return res - 256
+        self.env.cout = 0
         return res
 
 
@@ -381,7 +382,7 @@ class Pseudo(Instruction):
         text = template.format(**repls)
 
         # New instructions
-        for s in text.splitlines():
+        for s in text.strip().splitlines():
             mne, _ = s.strip().split(maxsplit=1)
             s_cls = RegisterStatementFabric.get(mne)
             inst = s_cls.new_instance(src, None, env, s)
@@ -449,9 +450,9 @@ class ShiftRightLogicalCarry(ShiftCarry):
     def execute(self):
         reg_m = self.registers[self.reg_m]
         reg_l = self.registers[self.reg_l]
-        reg_l = reg_m >>> self.shamt
+        reg_l = reg_m >> self.shamt
         self.registers[self.reg_l] = reg_l | (reg_m << (8 - self.shamt))
-        self.registers[self.reg_m] = reg_m >>> self.shamt
+        self.registers[self.reg_m] = reg_m >> self.shamt
 
 
 class ShiftLeftLogicalCarry(ShiftCarry):
@@ -501,5 +502,5 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         reg_m = self.registers[self.reg_m]
         reg_l = self.registers[self.reg_l]
         reg_m = reg_m << self.shamt
-        self.registers[self.reg_m] = reg_m | (reg_l >>> (8 - self.shamt))
+        self.registers[self.reg_m] = reg_m | (reg_l >> (8 - self.shamt))
         self.registers[self.reg_l] = reg_l << self.shamt
