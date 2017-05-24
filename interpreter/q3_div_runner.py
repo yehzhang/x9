@@ -31,8 +31,8 @@ def main():
         Debugger(),
     ]
     Interpreter(config, cbs).load('../targets/div_x9.s').run()
-    print mem_default[3]
-    print mem_default[4]
+    print(mem_default[3])
+    print(mem_default[4])
 
 if __name__ == '__main__':
     main()
