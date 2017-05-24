@@ -60,7 +60,7 @@ START:
     add quotient_MSW
     add quotient_LSW
     #if(divisor != 0){
-    lw r0, DIVISOR_ADDR
+    lw r0, DIVISOR_ADDR # good
     set r1, 0
     beq IF_EXIT
     #div = 0;
@@ -91,7 +91,7 @@ START:
     adc divident_temp_MSW
 FIRST_ELSE:
     # divident_neg = 0; 
-    set r0, 0
+    set r0, 0 # good
     set r1, 0
     add divident_neg
     # divident_temp = dividend;
@@ -99,7 +99,7 @@ FIRST_ELSE:
     set r1, 0
     add divident_temp_LSW
     lw r0, DIVIDEND_ADDR_MSW
-    add divident_temp_MSW
+    add divident_temp_MSW  # good
 
     #second if
     # if(divisor >> 7 == 1){
@@ -128,7 +128,9 @@ SECOND_ELSE:
     add divisor_temp
 
     # int i = 0;
-    set r0, 0 
+    set r0, 0
+    set r1, 1
+    sub r0 
     set r1, 0
     add i
 
@@ -228,7 +230,7 @@ THIRD_ELSE:
     sllc quotient_MSW, quotient_LSW, r3, quotient_MSW, quotient_LSW
 
     # time to check i
-    set r0, 16
+    set r0, 15
     mov r1, i
     bne FOR_LOOP_START
 

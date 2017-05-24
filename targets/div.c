@@ -20,17 +20,21 @@ int main()
         if(dividend >> 15 == 1){  //if most sig bit is 1
             divident_neg = 1; //1 bit
             divident_temp = ~dividend + 1; //
+            printf("H1\n");
         }else{
             divident_neg = 0; //1 bit
             divident_temp = dividend;
+            printf("H2\n");
         }
         //second if
         if(divisor >> 7 == 1){
             divisor_neg = 1; // 1 bit
             divisor_temp = ~divisor + 1;
+            printf("H3\n");
         }else{
             divisor_neg = 0; // 1 bit
             divisor_temp = divisor;
+            printf("H4\n");
         }
 
         // for start
@@ -46,10 +50,12 @@ int main()
 
             // third if
             if(div >= divisor_temp){
+                printf("bigger %d\n", i);
                 div = div - divisor_temp;
                 quotient = (quotient << 1);
                 quotient = quotient + 1; // 1 is 1 bit
             }else{
+                printf("smaller %d\n", i);
                 quotient = (quotient << 1);
             } 
         }
