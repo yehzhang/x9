@@ -54,6 +54,10 @@ int main(){
             x_new = x + (y>>i);
             y_new = y + ((-x)>>i);
             t_new = t + (1<<(11-i));
+            printf("%d\n", x_new);
+            printf("%d\n", y_new);
+            printf("%d\n", t_new);
+            printf("===========\n");
         }
         else{
             x_new = x + ((-y)>>i);
@@ -63,6 +67,10 @@ int main(){
         x = x_new;
         y = y_new;
         t = t_new;
+        printf("%d\n", x);
+        printf("%d\n", y);
+        printf("%d\n", t);
+        printf("--------------\n");
     }
 
     int radian = x; //store to location 5(MSW), 6(LSW)

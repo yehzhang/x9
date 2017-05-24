@@ -1,15 +1,21 @@
 #! /usr/bin/env python3
 from interpreter import Interpreter, Callback
 from pdb import set_trace
+from interpreter.environment import convert_to_signed_integer
 
 class Debugger(Callback):
     def on_instruction_begin(self, inst, env):
-        text = str(inst)
-        print(text)
-
+        pass
 
     def on_instruction_end(self, inst, env):
-        print(env)
+        text = str(inst)
+        print(text)
+        if text in ('add r15', 'adc t1'):
+            print(env)
+            set_trace()
+            pass
+        return
+
         return
 
 

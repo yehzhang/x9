@@ -43,19 +43,22 @@ FORLOOP:
       lw r0, 4
       add y2
 
-      set r0, 0
-      mov r1, y1
+
+      mov r0, y1
+      set r1, 0
       blts ELSE_ONLY:
 
-      beq IF_ONLY:
+      bne IF_ONLY:
 
+      mov r0, y2
+      set r1, 0
+      blts ELSE_ONLY:
 
 IF_ONLY:
-      mov r1, y2
-      blts ELSE_ONLY:
 
       #x_new = x + (y>>i);
-      srlc y1, y2, i, r2, r0 # y1, y2 equal to after shifted values
+      srlc y1, y2, i, r2, temp # y1, y2 equal to after shifted values
+      mov r0, temp
       mov r1, x2 # r1 = x2
       add x_new2 # x_new2 = y2+x2
       mov r0, r2
@@ -75,7 +78,8 @@ IF_ONLY:
       adc temp1 # temp1 = -x1+carry in case there is carrybit
 
 
-      srlc temp1, temp2, i, r2, r0
+      srlc temp1, temp2, i, r2, temp
+      mov r0, temp
       mov r1, y2 # add y2+ ((-x)>>i)'s LSB
       add y2
       mov r1, y1
@@ -87,12 +91,32 @@ IF_ONLY:
       set r0, 11
       mov r1, i
       sub temp1  #(11-i)
+
       set r0, 0
       set r1, 0
       add temp2
       set r0, 1
       add temp
-      sllc temp2, temp, temp1, r2, r0 # 0,1<<(11-i)
+
+      add r15
+      # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+      # mov r0, temp2
+      #   mov r1, temp1
+      #   sll r2
+      #   set r0, 8
+      #   sub r1
+      #   mov r0, temp
+      #   srl r1
+      #   mov r0, r2
+      #   or r2
+      #   mov r0, temp
+      #   mov r1, temp1
+      #   sll temp
+      # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+      sllc temp2, temp, temp1, r2, temp # 0,1<<(11-i)
+
+      mov r0, temp
       mov r1, t2
       add t2
       mov r1, t1
@@ -115,7 +139,8 @@ ELSE_ONLY:
 
 
       # -y>>i
-      srlc temp1, temp2, i, r2, r0 # temp1, temp1 equal to after shifted values
+      srlc temp1, temp2, i, r2, temp # temp1, temp1 equal to after shifted values
+      mov r0, temp
       mov r1, x2 # r1 = x2
       add x_new2 # x_new2 = y2+x2
       mov r0, r2
@@ -125,7 +150,8 @@ ELSE_ONLY:
 
 
       # y_new = y + (x>>i);
-      srlc x1, x2, i, r2, r0
+      srlc x1, x2, i, r2, temp
+      mov r0, temp
       mov r1, y2 # add y2+ ((x)>>i)'s LSB
       add y2
       mov r0, r2
