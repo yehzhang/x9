@@ -349,7 +349,6 @@ class Halt(RType):
     def alu_op(self, a, b):
         pass
 
-
 class Set(IType):
     mnemonic = 'set'
     opcode = 7
