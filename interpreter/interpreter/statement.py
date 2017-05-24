@@ -394,14 +394,18 @@ class Pseudo(Instruction):
         return '\n'.join(inst.as_code(target) for inst in self.insts)
 
 
+
 class ShiftCarry(Pseudo):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('reg_m', 4) | S.Register(
-        'reg_l', 4) | S.Register('shamt', 4)
+        'reg_l', 4) | S.Register('shamt', 4) | S.Register('reg_mr', 4) | S.Register(
+        'reg_lr', 4)
 
     def init_attrs(self):
         self.reg_m = None
         self.reg_l = None
         self.shamt = None
+        self.reg_mr = None
+        self.reg_lr = None
 
 
 class ShiftRightLogicalCarry(ShiftCarry):
@@ -441,16 +445,17 @@ class ShiftRightLogicalCarry(ShiftCarry):
         mov r0 {reg_m}
         sll r1
         mov r0 r2
-        or {reg_l}
+        or {reg_lr}
         mov r0 {reg_m}
         mov r1 {shamt}
-        srl {reg_m}'''
+        srl {reg_mr}'''
     def execute(self):
         reg_m = self.registers[self.reg_m]
         reg_l = self.registers[self.reg_l]
-        reg_l = reg_m >> self.shamt
-        self.registers[self.reg_l] = reg_l | (reg_m << (8 - self.shamt))
-        self.registers[self.reg_m] = reg_m >> self.shamt
+        shamt = self.registers[self.shamt]
+        reg_l = reg_m >> shamt
+        self.registers[self.reg_lr] = (reg_l | (reg_m << (8 - shamt))) & 0xFF
+        self.registers[self.reg_mr] = reg_m >> shamt
 
 
 class ShiftLeftLogicalCarry(ShiftCarry):
@@ -490,13 +495,17 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         mov r0 {reg_l}
         srl r1
         mov r0 r2
-        or {reg_m}
+        or {reg_mr}
         mov r0 {reg_l}
         mov r1 {shamt}
-        sll {reg_l}'''
+        sll {reg_lr}'''
     def execute(self):
         reg_m = self.registers[self.reg_m]
         reg_l = self.registers[self.reg_l]
-        reg_m = reg_m << self.shamt
-        self.registers[self.reg_m] = reg_m | (reg_l >> (8 - self.shamt))
-        self.registers[self.reg_l] = reg_l << self.shamt
+        shamt = self.registers[self.shamt]
+        reg_m = reg_m << shamt
+        if 8-shamt<0:
+            self.registers[self.reg_mr] = 0
+        else:
+            self.registers[self.reg_mr] = (reg_m | (reg_l >> (8 - shamt))) & 0xFF
+        self.registers[self.reg_lr] = (reg_l << shamt) & 0xFF
