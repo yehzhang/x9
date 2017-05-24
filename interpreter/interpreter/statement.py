@@ -286,7 +286,10 @@ class ShiftLeftLogical(RType):
     funct = 0
 
     def alu_op(self, a, b):
-        res = a << b
+        if b<0:
+            res = a>>b
+        else:
+            res = a << b
         if res > 255:
             return res & 255
         return res
@@ -299,7 +302,14 @@ class ShiftRightArithmetic(RType):
     funct = 1
 
     def alu_op(self, a, b):
-        return convert_to_signed_integer(a) >> b
+        a = convert_to_signed_integer(a)
+        if b<0:
+            res = a << b
+        else:
+            res = a >> b
+        if res > 255:
+            return res & 255
+        return res
 
 
 class ShiftRightLogical(RType):
@@ -308,7 +318,13 @@ class ShiftRightLogical(RType):
     funct = 2
 
     def alu_op(self, a, b):
-        return a >> b
+        if b<0:
+            res = a << b
+        else:
+            res = a >> b
+        if res > 255:
+            return res & 255
+        return res
 
 
 class Negation(RType):
@@ -317,7 +333,8 @@ class Negation(RType):
     funct = 0
 
     def alu_op(self, a, b):
-        return ~a
+        temp = 0xFF
+        return a ^ temp
 
 
 class And(RType):
@@ -348,7 +365,6 @@ class Halt(RType):
 
     def alu_op(self, a, b):
         pass
-
 
 class Set(IType):
     mnemonic = 'set'
@@ -394,14 +410,18 @@ class Pseudo(Instruction):
         return '\n'.join(inst.as_code(target) for inst in self.insts)
 
 
+
 class ShiftCarry(Pseudo):
     asm_mapper = S.Mnemonic('mnemonic') | S.Register('reg_m', 4) | S.Register(
-        'reg_l', 4) | S.Register('shamt', 4)
+        'reg_l', 4) | S.Register('shamt', 4) | S.Register('reg_mr', 4) | S.Register(
+        'reg_lr', 4)
 
     def init_attrs(self):
         self.reg_m = None
         self.reg_l = None
         self.shamt = None
+        self.reg_mr = None
+        self.reg_lr = None
 
 
 class ShiftRightLogicalCarry(ShiftCarry):
@@ -441,18 +461,10 @@ class ShiftRightLogicalCarry(ShiftCarry):
         mov r0 {reg_m}
         sll r1
         mov r0 r2
-        or {reg_l}
+        or {reg_lr}
         mov r0 {reg_m}
         mov r1 {shamt}
-        srl {reg_m}
-    '''
-
-    def execute(self):
-        reg_m = self.registers[self.reg_m]
-        reg_l = self.registers[self.reg_l]
-        reg_l = reg_m >> self.shamt
-        self.registers[self.reg_l] = reg_l | (reg_m << (8 - self.shamt))
-        self.registers[self.reg_m] = reg_m >> self.shamt
+        srl {reg_mr}'''
 
 
 class ShiftLeftLogicalCarry(ShiftCarry):
@@ -492,15 +504,7 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         mov r0 {reg_l}
         srl r1
         mov r0 r2
-        or {reg_m}
+        or {reg_mr}
         mov r0 {reg_l}
         mov r1 {shamt}
-        sll {reg_l}
-    '''
-
-    def execute(self):
-        reg_m = self.registers[self.reg_m]
-        reg_l = self.registers[self.reg_l]
-        reg_m = reg_m << self.shamt
-        self.registers[self.reg_m] = reg_m | (reg_l >> (8 - self.shamt))
-        self.registers[self.reg_l] = reg_l << self.shamt
+        sll {reg_lr}'''
