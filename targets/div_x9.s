@@ -146,7 +146,7 @@ FOR_LOOP_START:
     sub temp3 # shift_LSB   # good
     set r0, 0
     set r1, 0 
-    add temp2 # shift_MSB
+    add temp2 # shift_MSB    # good
     # shift = divident_temp >> shift;
     srlc divident_temp_MSW, divident_temp_LSW, temp3, r0, r2
     # shift = shift & 1;

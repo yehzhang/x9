@@ -7,15 +7,21 @@ class Debugger(Callback):
         self.has_met = False
 
     def on_instruction_begin(self, inst, env):
+        # text = str(inst)
+        # print(text)
+        # if text in ('set r0, FIFTEEN', 'sw r0, RETURN_ADDR'):
+        #     print(env)
+        #     set_trace()
+        #     pass
+        return
+
+    def on_instruction_end(self, inst, env):
         text = str(inst)
         print(text)
         if text in ('set r0, FIFTEEN', 'sw r0, RETURN_ADDR'):
             print(env)
             set_trace()
             pass
-        return
-
-    def on_instruction_end(self, inst, env):
         return
 
 
