@@ -47,17 +47,20 @@ int main()
             //get div[14:0]
             int div = div << 1;
             div = div + shift;
-
+            printf("for loop %d\n", i);
+            printf("div: %d shift: %d\n", div, shift);
             // third if
             if(div >= divisor_temp){
                 printf("bigger %d\n", i);
                 div = div - divisor_temp;
                 quotient = (quotient << 1);
                 quotient = quotient + 1; // 1 is 1 bit
+                printf("div: %d quotient: %d\n", div, quotient);
             }else{
                 printf("smaller %d\n", i);
                 quotient = (quotient << 1);
-            } 
+                 printf("quotient: %d\n", quotient);
+            }
         }
         if(divident_neg != divisor_neg){
             printf("H5\n");

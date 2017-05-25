@@ -29,7 +29,7 @@
 # FOR_LOOP_START
 # THIRD_ELSE
 
-define temp                 r3 
+define temp                 r3
 define temp2                r4      #(shift_MSB),always 0
 define temp3                r5      #(shift_LSB)
 define quotient_MSW         r6      #(set)
@@ -43,11 +43,11 @@ define divident_temp_LSW    r13     #(set)
 define divisor_temp         r14     #(set)
 define i                    r15
 
-define DIVIDEND_ADDR_MSW 0
-define DIVIDEND_ADDR_LSW 1
-define DIVISOR_ADDR 2
-define QUOTIENT_RETURN_ADDR_MSW 3
-define QUOTIENT_RETURN_ADDR_LSW 4
+define DIVIDEND_ADDR_MSW 128
+define DIVIDEND_ADDR_LSW 129
+define DIVISOR_ADDR 130
+define QUOTIENT_RETURN_ADDR_MSW 126
+define QUOTIENT_RETURN_ADDR_LSW 127
 
 define ONE 1
 define SEVEN 7
@@ -79,18 +79,18 @@ START:
     set r1, 1
     set r0, 0
     add divident_neg
-    # divident_temp = ~dividend + 1; 
+    # divident_temp = ~dividend + 1;
     lw r0, DIVIDEND_ADDR_LSW
-    neg r1    
+    neg r1
     lw r0, DIVIDEND_ADDR_MSW
-    neg r2  
+    neg r2
     set r0, 1
     add divident_temp_LSW
     set r0, 0
     mov r1, r2
     adc divident_temp_MSW
 FIRST_ELSE:
-    # divident_neg = 0; 
+    # divident_neg = 0;
     set r0, 0 # good
     set r1, 0
     add divident_neg
@@ -108,13 +108,13 @@ FIRST_ELSE:
     srl r1
     set r0, 1
     bne SECOND_ELSE
-    # divisor_neg = 1; 
+    # divisor_neg = 1;
     set r0, 0
     set r1, 1
     add divisor_neg
     # divisor_temp = ~divisor + 1;
-    lw r0, DIVISOR_ADDR 
-    neg r1 
+    lw r0, DIVISOR_ADDR
+    neg r1
     set r0, 1
     add divisor_temp
 SECOND_ELSE:
@@ -130,13 +130,13 @@ SECOND_ELSE:
     # int i = 0;
     set r0, 0
     set r1, 1
-    sub r0 
+    sub r0
     set r1, 0
     add i
 
 FOR_LOOP_START:
     # i++
-    mov r0, i 
+    mov r0, i
     set r1, 1
     add i
 
@@ -145,10 +145,11 @@ FOR_LOOP_START:
     mov r1, i
     sub temp3 # shift_LSB   # good
     set r0, 0
-    set r1, 0 
+    set r1, 0
     add temp2 # shift_MSB    # good
     # shift = divident_temp >> shift;
     srlc divident_temp_MSW, divident_temp_LSW, temp3, r0, r2
+
     # shift = shift & 1;
     mov r1, r2
     set r0, 1
@@ -161,6 +162,8 @@ FOR_LOOP_START:
     set r1, 0
     add temp
     sllc div_MSW, div_LSW, temp, div_MSW, div_LSW
+
+
     # div = div + shift;
     mov r0, temp3
     mov r1, div_LSW
@@ -182,7 +185,7 @@ FOR_LOOP_START:
     blts THIRD_ELSE
     # div = div - divisor_temp;
     # first: extend bit for divisor_temp
-    set r0, 0 
+    set r0, 0
     set r1, 0
     add temp2 # temp2 holds MSB for extend_divisor_temp
     set r0, 0
@@ -215,7 +218,10 @@ EXTEND_BIT_COMPELET:
     set r0, 1
     set r1, 0
     add r3
+    # set r1, 28 #NOP
     sllc quotient_MSW, quotient_LSW, r3, quotient_MSW, quotient_LSW
+
+    # set r1, 28 #NOP
     # quotient = quotient + 1;
     mov r0, quotient_LSW
     set r1, 1
@@ -223,6 +229,13 @@ EXTEND_BIT_COMPELET:
     mov r0, quotient_MSW
     set r1, 0
     adc quotient_MSW
+
+    # set r1, 28 #NOP
+
+    set r0, 0
+    set r1, 0
+    beq CHECK_I
+
 THIRD_ELSE:
     # quotient = (quotient << 1);
     set r0, 1
@@ -230,8 +243,9 @@ THIRD_ELSE:
     add r3
     sllc quotient_MSW, quotient_LSW, r3, quotient_MSW, quotient_LSW
 
+CHECK_I:
     # time to check i
-    set r0, 15
+    set r0, FIFTEEN
     mov r1, i
     bne FOR_LOOP_START
 
@@ -242,9 +256,9 @@ THIRD_ELSE:
     beq IF_EXIT
     # quotient = ~quotient + 1
     mov r0, quotient_LSW
-    neg r1    
+    neg r1
     mov r0, quotient_MSW
-    neg r2  
+    neg r2
     set r0, 1
     add quotient_LSW
     set r0, 0

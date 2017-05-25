@@ -18,18 +18,21 @@ class Debugger(Callback):
     def on_instruction_end(self, inst, env):
         text = str(inst)
         print(text)
-        if text in ('set r0, FIFTEEN', 'sw r0, RETURN_ADDR'):
+        #'set r0, FIFTEEN', 'sw r0, RETURN_ADDR'
+        if text in ('set r1, 28'):
             print(env)
             set_trace()
             pass
         return
 
+        return
+
 
 def main():
     mem_default = [0] * 256
-    mem_default[0] = 0
-    mem_default[1] = 20
-    mem_default[2] = 3
+    mem_default[128] = 0
+    mem_default[129] = 20
+    mem_default[130] = 3
     config = {
        'reg_default': 0,
        'mem_default': mem_default,
