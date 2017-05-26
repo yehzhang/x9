@@ -132,3 +132,5 @@ nanoml.top
 nano/.*
 
 interpreter/interpreter/nano/translator
+
+windows lab2
