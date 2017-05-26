@@ -384,10 +384,12 @@ class Pseudo(Instruction):
         super().__init__(instruction_id, env)
         self.insts = []
 
-    def execute(self):
+    def run(self):
         for inst in self.insts:
-            inst.execute()
-        self.env.execution_count -= 1
+            inst.run()
+
+    def execute(self):
+        pass
 
     @classmethod
     def new_instance(cls, src, instruction_id, env, text):
@@ -490,8 +492,8 @@ class ShiftLeftLogicalCarry(ShiftCarry):
         mov r0, reg_l
         srl r1
         # reg_m = reg_m | (reg_l >>> (8 - shamt))
-        mov r0, r2
         or reg_m
+        mov r0, r2
         # reg_l = reg_l << shamt
         mov r0, reg_l
         set r1, shamt
