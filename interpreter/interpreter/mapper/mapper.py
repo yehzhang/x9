@@ -19,13 +19,6 @@ class TokenMapper:
         """
         return InstructionMapper() | self | other
 
-    def __and__(self, other):
-        """
-        :param TokenMapper other:
-        :return InstructionMapper:
-        """
-        return self | InstructionSeparator() | other
-
     def parse_and_set_attr(self, env, word, obj):
         """ Setting attribute is skipped during deserialization if attr is not specified. """
         value = self.parse(env, type(obj), word)
@@ -97,13 +90,6 @@ class InstructionMapper:
             assert False
         return self
 
-    def __and__(self, other):
-        """ Concatenate mappers of two instructions
-        :param TokenMapper other:
-        :return InstructionMapper:
-        """
-        return self | InstructionSeparator() | other
-
     def deserialize(self, env, text, obj):
         for m in self.mappers:
             token, text = m.tokenize(text)
@@ -150,23 +136,3 @@ class BitConstrained(TokenMapper):
         :return int:
         """
         raise NotImplementedError
-
-
-class InstructionSeparator(TokenMapper):
-    """ Convert an Instruction object to multiple instructions in the target language.
-    Note that the conversion is not injective, meaning that the converted instructions
-    cannot be mapped back to the original Instruction object, possibly multiple objects
-    instead.
-    """
-    def __init__(self, sep='\n'):
-        super().__init__(None)
-        self.sep = sep
-
-    def compose(self, env, value):
-        return ''
-
-    def join(self, token, text):
-        """
-        :param str token: should be the '' returned by compose
-        """
-        return token + self.sep + text
