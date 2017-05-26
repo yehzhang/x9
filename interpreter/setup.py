@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='xxx-assembly-interpreter',
+    name='x9-interpreter',
     version='0.1',
     author='Simon Zhang',
     license='MIT',
