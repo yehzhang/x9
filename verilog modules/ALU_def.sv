@@ -1,6 +1,6 @@
 // This file defines the parameters used in the alu
 package ALU_def;
-    typedef enum logic[3:0] {
+    typedef enum {
         ALU_ADD,
         ALU_ADDC,
         ALU_SUB,

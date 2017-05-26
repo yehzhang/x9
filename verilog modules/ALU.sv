@@ -1,4 +1,3 @@
-// TODO refactor cin and cout as an internal register?
 import ALU_def::*;
 module ALU(
   input cin,
@@ -10,14 +9,14 @@ module ALU(
 );
 
   always_comb begin
-    cout = 0;
     unique case (ctrl_input)
       ALU_ADD:  {cout, out} = a + b;
       ALU_ADDC: {cout, out} = a + b + cin;
       ALU_SUB:  out = a - b;
-      ALU_SLL:  out = a << b;
-      ALU_SRA:  out = a >> b;
-      ALU_SRL:  out = a >>> b;
+      ALU_SLL:  out = $signed(b) >= 0 ? a << b : a >> -$signed(b);
+      // Max shamt 16
+      ALU_SRA:  out = $signed(b) >= 0 ? {{16{a[7]}}, a} >> b : a << -$signed(b);
+      ALU_SRL:  out = $signed(b) >= 0 ? a >> b : a << -$signed(b);
       ALU_AND:  out = a & b;
       ALU_OR:   out = a | b;
       ALU_NEG:  out = ~a;
