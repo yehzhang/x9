@@ -14,8 +14,7 @@ package LUT_def;
     }} LUT_TYPE;
 
     // LUT[opcode][imm] => value
-    const logic[7:0] kLookupTable[2:0][4:0] =
-{};
+    const logic[7:0] kLookupTable[2:0][4:0] = {};
 endpackage
 '''
     SV_ARR_TEMPLATE = "'{{{}}}"
