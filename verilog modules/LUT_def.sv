@@ -3,13 +3,13 @@
 package LUT_def;
     // LUT index
     // Generated
-    typedef enum logic[2:0] {
+    typedef enum {
         LUT_LW = 0,
-        LUT_SW = 0,
-        LUT_BNE = 0,
-        LUT_BEQ = 0,
-        LUT_BLTS = 0,
-        LUT_BLT = 0,
+        LUT_SW = 1,
+        LUT_BNE = 2,
+        LUT_BEQ = 3,
+        LUT_BLTS = 4,
+        LUT_BLT = 5
     } LUT_TYPE;
 
     // LUT[opcode][imm] => value

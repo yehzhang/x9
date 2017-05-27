@@ -7,16 +7,16 @@ module ALU(
   output logic cout,
   output logic zero
 );
-
-  always_comb begin
+	
+  always @(*) begin
     unique case (ctrl_input)
       ALU_ADD:  {cout, out} = a + b;
       ALU_ADDC: {cout, out} = a + b + cin;
       ALU_SUB:  out = a - b;
-      ALU_SLL:  out = $signed(b) >= 0 ? a << b : a >> -$signed(b);
+      ALU_SLL:  out = $signed(b) >= 0 ? a << b : a >> $unsigned(-$signed(b));
       // Max shamt 16
-      ALU_SRA:  out = $signed(b) >= 0 ? {{16{a[7]}}, a} >> b : a << -$signed(b);
-      ALU_SRL:  out = $signed(b) >= 0 ? a >> b : a << -$signed(b);
+      ALU_SRA:  out = $signed(b) >= 0 ? {{16{a[7]}}, a} >> b : a << $unsigned(-$signed(b));
+      ALU_SRL:  out = $signed(b) >= 0 ? a >> b : a << $unsigned(-$signed(b));
       ALU_AND:  out = a & b;
       ALU_OR:   out = a | b;
       ALU_NEG:  out = ~a;
@@ -26,5 +26,5 @@ module ALU(
     endcase
     zero = out == 0;
   end
-
+  
 endmodule

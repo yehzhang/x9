@@ -19,7 +19,7 @@ module data_mem #(parameter SIZE=256)(
       data_out = my_memory[addr];
     // $display("Memory read M[%d] = %d",addr,data_out);
     end else
-      data_out = 'bZ;
+      data_out = 8'bZ;
 
   always_ff @ (posedge clk)
     if(ctrl_mem_write) begin

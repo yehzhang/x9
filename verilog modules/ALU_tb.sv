@@ -1,16 +1,16 @@
 import ALU_def::*;
 module ALU_tb;
-    bit [10:0] test_case;
+    logic [10:0] test_case;
 
     // Input
-    bit cin;
+    logic cin;
     ALU_CTRL ctrl_input;
-    bit [7:0] a, b;
+    logic [7:0] a, b;
 
     // Output
-    bit [7:0] out;
-    bit cout;
-    bit zero;
+    logic [7:0] out;
+    logic cout;
+    logic zero;
 
     // Instantiate the Unit Under Test (UUT)
     ALU uut(

@@ -1,10 +1,10 @@
 module reg_file_tb;
-	bit          clk;	      // bit can be only 0, 1 (no x or z)
-  bit          RegWrite;   // bit self-initializes to 0, not x (handy)
-	bit [3:0] 		raddrA;
-	bit [3:0]			raddrB;
-	bit [3:0] 	  write_register;
-	bit [7:0] data_in;
+	logic          clk;
+  logic          RegWrite;
+	logic [3:0] 		raddrA;
+	logic [3:0]			raddrB;
+	logic [3:0] 	  write_register;
+	logic [7:0] data_in;
 	wire [7:0] data_outA;
   wire [7:0] data_outB;
 // Instantiate the Unit Under Test (UUT)

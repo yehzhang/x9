@@ -1,15 +1,13 @@
-// This file defines the parameters used in the TopLevel
-package TopLevel_def;
-    // Generated
-    typedef enum logic[2:0] {
+package ControlUnit_def;
+    typedef enum {
         R_ADD = 0,
-        I_LW = 0,
-        I_SW = 0,
-        B_BEQ = 0,
-        M_MOV = 0,
-        R_SHF = 3'b001,
-        R_NEG = 0,
-        I_SET = 0,
+        I_LW = 1,
+        I_SW = 2,
+        B_BEQ = 3,
+        M_MOV = 4,
+        R_SLL = 5,
+        R_NEG = 6,
+        I_SET = 7
     } Opcode;
 
     parameter FUN_BEQ = 0;

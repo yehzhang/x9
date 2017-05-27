@@ -1,12 +1,12 @@
 module IF_tb #(parameter A=4);
     // Input
-    bit clk;
-    bit start;
-    bit ctrl_branch;
-    bit take_branch;
-    bit [A-1:0] inst_addr_reset; // used by reset
-    bit [A-1:0] inst_addr_in; // used by branch or reset
-    bit halt;
+    logic clk;
+    logic start;
+    logic ctrl_branch;
+    logic take_branch;
+    logic [A-1:0] inst_addr_reset; // used by reset
+    logic [A-1:0] inst_addr_in; // used by branch or reset
+    logic halt;
 
     // Output
     logic[A-1:0] pc;
