@@ -243,7 +243,7 @@ END:
       lw r0, 2
       add x2
 
-      add r15
+      # add r15
 
       sllc x1, x2, i, x1, x2
       mov r0, x1
