@@ -23,8 +23,37 @@ define x2 r14
       set r1, 0
       add t1
       add t2
-      add i
 
+      # set i = 4 first
+      set r0, 4
+      add i
+      lw r0, 1
+      add x1
+      lw r0, 2
+      add x2
+      srlc x1, x2, i, x1, x2
+
+      mov r0, x1
+      mov r1, x2
+      sw r0, 1
+      sw r1, 2
+
+
+      set r1, 0
+      lw r0, 3
+      add y1
+      lw r0, 4
+      add y2
+      srlc y1, y2, i, y1, y2
+      mov r0, y1
+      mov r1, y2
+      sw r0, 3
+      sw r1, 4
+
+      # set i back to zero
+      set r0, 0
+      set r1, 0
+      add i
 
 FORLOOP:
       #compare i with 12
@@ -44,11 +73,13 @@ FORLOOP:
       add y2
 
 
+
       mov r0, y1
       set r1, 0
       blts ELSE_ONLY:
 
       bne IF_ONLY:
+
 
       mov r0, y2
       set r1, 0
@@ -202,11 +233,27 @@ ASSIGN:
 
 END:
       # store radian x
+      set r0, 0
+      set r1, 4
+      add i # i = 4
+
+      set r1, 0
       lw r0, 1
-      lw r1, 2
+      add x1
+      lw r0, 2
+      add x2
+
+      add r15
+
+      sllc x1, x2, i, x1, x2
+      mov r0, x1
+      mov r1, x2
       sw r0, 5
       sw r1, 6
+
       #store theta t
+      sllc t1, t2, i, t1, t2
+
       mov r0, t1
       mov r1, t2
       sw r0, 7

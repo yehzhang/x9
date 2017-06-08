@@ -30,9 +30,9 @@ class Debugger(Callback):
 
 def main():
     mem_default = [0] * 256
-    mem_default[128] = 0
-    mem_default[129] = 20
-    mem_default[130] = 3
+    mem_default[128] = 0x00
+    mem_default[129] = 0x6f
+    mem_default[130] = 0x70
     config = {
        'reg_default': 0,
        'mem_default': mem_default,
