@@ -2,12 +2,8 @@ from .mapper import TokenMapper
 
 
 class MachineCode(TokenMapper):
-    def __init__(self, attr, underscore=True):
-        super().__init__(attr)
-        self.sep = '_' if underscore else ''
-
     def join(self, token, text):
-        return token + self.sep + text
+        return token + text
 
 
 class Bits(MachineCode):
