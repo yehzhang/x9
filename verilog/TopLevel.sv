@@ -20,7 +20,7 @@ module TopLevel(
     wire ctrl_branch;
     wire take_branch;
     wire[8:0] instruction;
-    wire[15:0] pc;
+    wire[8:0] pc;
 
     wire ctrl_reg_write;
     // register indices
@@ -30,7 +30,7 @@ module TopLevel(
     // register outputs
     wire[7:0] reg_a, reg_b;
 
-    logic alu_carry_bit;
+    // logic alu_carry_bit;
     wire alu_zero;
     wire[7:0] alu_out;
     ALU_CTRL ctrl_alu_input;
@@ -39,12 +39,12 @@ module TopLevel(
     wire[7:0] lut_out;
     wire[4:0] immediate;
 
-    logic cycle_ct;
+    logic[31:0] cycle_ct;
 
 
-    initial begin
-        alu_carry_bit = 0;
-    end
+    // initial begin
+    //     alu_carry_bit = 0;
+    // end
 
 
     ControlUnit CU(
@@ -75,19 +75,20 @@ module TopLevel(
 // Program Counter
     // TODO INSTS_CNT = ?
     // IF #(.INSTS_CNT(1000)) PC1(
-    IF PC1(
+    IF #(.A(9)) PC1(
         .reset(start),
-        .inst_addr_reset(0),
+        .inst_addr_reset(9'b0),
         .halt,
         .clk,
         .ctrl_branch,
         .take_branch,
-        .inst_addr_in(lut_out),
+        .inst_addr_in({1'b0, lut_out}),
         .inst_addr_out(pc)
     );
 
 // instruction ROM
-    instr_ROM #(.A(16)) instr_ROM1(
+    instr_ROM #(.A(9)) instr_ROM1(
+        .halt,
         .inst_addr(pc),
         .inst_out(instruction)
     );
@@ -100,12 +101,12 @@ module TopLevel(
     );
 
     ALU alu(
-        .cin(alu_carry_bit),
+        // .cin(alu_carry_bit),
         .ctrl_input(ctrl_alu_input),
         .a(reg_a),
         .b(reg_b),
         .out(alu_out),
-        .cout(alu_carry_bit),
+        // .cout(alu_carry_bit),
         .zero(alu_zero)
     );
 

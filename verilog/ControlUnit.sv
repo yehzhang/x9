@@ -131,7 +131,8 @@ module ControlUnit(
                 FUN_ADD: ctrl_alu_input = ALU_ADD;
                 FUN_ADDC: ctrl_alu_input = ALU_ADDC;
                 FUN_SUB: ctrl_alu_input = ALU_SUB;
-                FUN_LWR:;
+                // FUN_LWR:;
+                default:; // nothing
             endcase
             R_SLL: unique case (funct)
                 FUN_SLL: ctrl_alu_input = ALU_SLL;
@@ -143,7 +144,8 @@ module ControlUnit(
                 FUN_NEG: ctrl_alu_input = ALU_NEG;
                 FUN_AND: ctrl_alu_input = ALU_AND;
                 FUN_OR: ctrl_alu_input = ALU_OR;
-                FUN_HALT:; // TODO
+                // FUN_HALT:;
+                default:; // nothing
             endcase
             B_BEQ: unique case (funct)
                 FUN_BEQ: ctrl_alu_input = ALU_SUB;

@@ -113,3 +113,4 @@ for_exit:
 
     mov r0, count
     sw r0, RETURN_ADDR
+    halt r0

@@ -1,17 +1,18 @@
 import ALU_def::*;
 module ALU(
-  input cin,
+  // input cin,
   input ALU_CTRL ctrl_input,
   input [7:0] a, b,
   output logic [7:0] out,
-  output logic cout,
+  // output logic cout,
   output logic zero
 );
-	
+  logic alu_carry_bit;
+
   always @(*) begin
     unique case (ctrl_input)
-      ALU_ADD:  {cout, out} = a + b;
-      ALU_ADDC: {cout, out} = a + b + cin;
+      ALU_ADD:  {alu_carry_bit, out} = a + b;
+      ALU_ADDC: {alu_carry_bit, out} = a + b + alu_carry_bit;
       ALU_SUB:  out = a - b;
       ALU_SLL:  out = $signed(b) >= 0 ? a << b : a >> $unsigned(-$signed(b));
       // Max shamt 16
@@ -26,5 +27,5 @@ module ALU(
     endcase
     zero = out == 0;
   end
-  
+
 endmodule
