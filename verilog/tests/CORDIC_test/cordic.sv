@@ -36,7 +36,7 @@ always_comb begin
 	//  t_temp = t_temp - 4096;
 	//else if(t_temp < -2048)
 	//  t_temp = t_temp + 4096;
-	t = t_temp; 
+	t = t_temp;
 end
 
 /*function [15:0] angle;
