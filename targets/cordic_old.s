@@ -26,33 +26,33 @@ define x2 r14
 
 
       # set i = 4 first
-      set r0, 4
-      add i
-      lw r0, 1
-      add x1
-      lw r0, 2
-      add x2
-      srlc x1, x2, i, x1, x2
+      # set r0, 4
+      # add i
+      # lw r0, 1
+      # add x1
+      # lw r0, 2
+      # add x2
+      # srlc x1, x2, i, x1, x2
 
 
 
-      mov r0, x1
-      mov r1, x2
-      sw r0, 1
-      sw r1, 2
+      # mov r0, x1
+      # mov r1, x2
+      # sw r0, 1
+      # sw r1, 2
 
 
 
-      set r1, 0
-      lw r0, 3
-      add y1
-      lw r0, 4
-      add y2
-      srlc y1, y2, i, y1, y2
-      mov r0, y1
-      mov r1, y2
-      sw r0, 3
-      sw r1, 4
+      # set r1, 0
+      # lw r0, 3
+      # add y1
+      # lw r0, 4
+      # add y2
+      # srlc y1, y2, i, y1, y2
+      # mov r0, y1
+      # mov r1, y2
+      # sw r0, 3
+      # sw r1, 4
 
 
       # set i back to zero
@@ -107,7 +107,7 @@ IF_ONLY:
       # y_new = y + ((-x)>>i);
       mov r0, x2
       neg r0  #r0 = -x2
-      set r1, 1
+      set r1, 16
       add temp2 # add -x2+1, 2's complement
       mov r0, x1
       neg r0
@@ -156,12 +156,12 @@ ELSE_ONLY:
       #x_new = x + ((-y)>>i);
       mov r0, y2
       neg r0  #r0 = -y2
-      set r1, 1
+      set r1, 16
       add temp2 # temp2 = -x2+1
       mov r0, y1
       neg r0 # r0 = -y1
       set r1, 0
-      add temp1 # temp1 = -x1+carru
+      adc temp1 # temp1 = -x1+carru
 
 
       # -y>>i
@@ -198,7 +198,7 @@ ELSE_ONLY:
 
       #negate temp1, temp2
       neg r0 # negate 1<<(11-i) LSB
-      set r1, 1
+      set r1, 16
       add temp2 # temp2 = -1<<(11-i) LSB+1
       mov r0, r2
       neg r0
@@ -238,31 +238,42 @@ ASSIGN:
       beq FORLOOP:
 
 END:
-      # store radian x
-      set r0, 0
-      set r1, 4
-      add i # i = 4
+      # # store radian x
+      # set r0, 0
+      # set r1, 4
+      # add i # i = 4
 
-      set r1, 0
-      lw r0, 1
-      add x1
-      lw r0, 2
-      add x2
+      # set r1, 0
+      # lw r0, 1
+      # add x1
+      # lw r0, 2
+      # add x2
 
-      # add r15
+      # # add r15
 
-      sllc x1, x2, i, x1, x2
-      mov r0, x1
-      mov r1, x2
-      sw r0, 5
-      sw r1, 6
+      # sllc x1, x2, i, x1, x2
+      # mov r0, x1
+      # mov r1, x2
+      # sw r0, 5
+      # sw r1, 6
 
-      #store theta t
-      sllc t1, t2, i, t1, t2
+      # #store theta t
+      # sllc t1, t2, i, t1, t2
 
-      mov r0, t1
-      mov r1, t2
-      sw r0, 7
-      sw r1, 8
+      # mov r0, t1
+      # mov r1, t2
+      # sw r0, 7
+      # sw r1, 8
+
+      lw r0,1
+      sw r0,5
+      lw r0,2
+      sw r0,6
+      mov r0,t1
+      sw r0,7
+      mov r0,t2
+      sw r0,8
+
+      add r15
 
       halt r0

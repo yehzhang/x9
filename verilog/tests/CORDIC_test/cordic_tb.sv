@@ -79,7 +79,7 @@ initial begin
   #100ns wait(done);
   #10ns  r_DUT = {DUT.data_mem1.my_memory[5],DUT.data_mem1.my_memory[6]};
          t_DUT = {DUT.data_mem1.my_memory[7],DUT.data_mem1.my_memory[8][7:4]};
-  #10ns  $display(r_beh,t_beh,r_DUT,t_DUT);
+  #10ns  $display(r_beh,,,t_beh,,,,,r_DUT,,,t_DUT);
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial
@@ -104,7 +104,7 @@ initial begin
   #100ns wait(done);
   #10ns  r_DUT = {DUT.data_mem1.my_memory[5],DUT.data_mem1.my_memory[6]};
          t_DUT = {DUT.data_mem1.my_memory[7],DUT.data_mem1.my_memory[8][7:4]};
-  #10ns  $display(r_beh,t_beh,r_DUT,t_DUT);
+  #10ns  $display(r_beh,,,t_beh,,,,,r_DUT,,,t_DUT);
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial
@@ -129,7 +129,7 @@ initial begin
   #100ns wait(done);
   #10ns  r_DUT = {DUT.data_mem1.my_memory[5],DUT.data_mem1.my_memory[6]};
          t_DUT = {DUT.data_mem1.my_memory[7],DUT.data_mem1.my_memory[8][7:4]};
-  #10ns  $display(r_beh,t_beh,r_DUT,t_DUT);
+  #10ns  $display(r_beh,,,t_beh,,,,,r_DUT,,,t_DUT);
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial

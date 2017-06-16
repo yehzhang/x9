@@ -38,7 +38,7 @@ initial begin
   for(int i=0; i<16; i++)
 	DUT.reg_file1.registers[i] = 8'b0;
 // load instruction ROM	-- unfilled elements will get x's -- should be harmless
-  $readmemb("div.txt",DUT.instr_ROM1.instructions);
+  $readmemb("//Mac/Home/Desktop/cse141l-interpreter/verilog/tests/divide_test/div.txt",DUT.instr_ROM1.instructions);
 //  monitor ("dividend=%d,divisor=%d,quotient=%d", dividend, divisor, quotient);
   #10ns start = 1'b0;
   #100ns wait(done);
@@ -59,7 +59,7 @@ initial begin
   for(int i=0; i<16; i++)
 	DUT.reg_file1.registers[i] = 8'b0;
 // load instruction ROM	-- unfilled elements will get x's -- should be harmless
-  $readmemb("div.txt",DUT.instr_ROM1.instructions);
+  $readmemb("//Mac/Home/Desktop/cse141l-interpreter/verilog/tests/divide_test/div.txt",DUT.instr_ROM1.instructions);
 //  monitor ("dividend=%d,divisor=%d,quotient=%d", dividend, divisor, quotient);
   #10ns start = 1'b0;
   #100ns wait(done);
@@ -80,7 +80,7 @@ initial begin
   for(int i=0; i<16; i++)
 	DUT.reg_file1.registers[i] = 8'b0;
 // load instruction ROM	-- unfilled elements will get x's -- should be harmless
-  $readmemb("div.txt",DUT.instr_ROM1.instructions);
+  $readmemb("//Mac/Home/Desktop/cse141l-interpreter/verilog/tests/divide_test/div.txt",DUT.instr_ROM1.instructions);
 //  monitor ("dividend=%d,divisor=%d,quotient=%d", dividend, divisor, quotient);
   #10ns start = 1'b0;
   #100ns wait(done);
@@ -101,7 +101,7 @@ initial begin
   for(int i=0; i<16; i++)
 	DUT.reg_file1.registers[i] = 8'b0;
 // load instruction ROM	-- unfilled elements will get x's -- should be harmless
-  $readmemb("div.txt",DUT.instr_ROM1.instructions);
+  $readmemb("//Mac/Home/Desktop/cse141l-interpreter/verilog/tests/divide_test/div.txt",DUT.instr_ROM1.instructions);
 //  monitor ("dividend=%d,divisor=%d,quotient=%d", dividend, divisor, quotient);
   #10ns start = 1'b0;
   #100ns wait(done);
@@ -122,7 +122,7 @@ initial begin
   for(int i=0; i<16; i++)
 	DUT.reg_file1.registers[i] = 8'b0;
 // load instruction ROM	-- unfilled elements will get x's -- should be harmless
-  $readmemb("div.txt",DUT.instr_ROM1.instructions);
+  $readmemb("//Mac/Home/Desktop/cse141l-interpreter/verilog/tests/divide_test/div.txt",DUT.instr_ROM1.instructions);
 //  monitor ("dividend=%d,divisor=%d,quotient=%d", dividend, divisor, quotient);
   #10ns start = 1'b0;
   #100ns wait(done);

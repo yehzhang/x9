@@ -106,8 +106,11 @@ FORLOOP:
       set r1, 0
       blts ELSE_ONLY:
 
+      add r15
+
       bne IF_ONLY:
 
+      add r15
 
       mov r0, y2
       set r1, 0
@@ -216,7 +219,7 @@ ELSE_ONLY:
       mov r0, y1
       neg r0 # r0 = -y1
       set r1, 0
-      add temp1 # temp1 = -x1+carru
+      adc temp1 # temp1 = -x1+carru
 
 
       # -y>>i
@@ -318,7 +321,7 @@ ASSIGN:
       sw r0, 3
       sw r1, 4
 
-      # add r15
+      add r15
 
       # go back to for loop
       set r0, 0
@@ -374,6 +377,8 @@ END:
       mov r1, t2
       sw r0, 7
       sw r1, 8
+
+      add r15
 
       halt r0
 

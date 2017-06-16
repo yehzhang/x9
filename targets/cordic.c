@@ -45,7 +45,7 @@ int main(){
     // int x = 4096; //store in location 1(MSW), 2(LSW)
     // int y = 0; //store in location 3(MSW), 4(LSW)
     int x = 256;
-    int y = 256;
+    int y = 80;
     int x_new, y_new, t_new;
 
     int t = 0<<11; //12 bits
@@ -56,6 +56,7 @@ int main(){
             x_new = x + (y>>i);
             y_new = y + ((-x)>>i);
             t_new = t + (1<<(11-i));
+            printf("if part\n");
             printf("%d\n", x_new);
             printf("%d\n", y_new);
             printf("%d\n", t_new);
@@ -65,14 +66,19 @@ int main(){
             x_new = x + ((-y)>>i);
             y_new = y + (x>>i);
             t_new = t - (1<<(11-i));
+            printf("else part\n");
+            printf("%d\n", x_new);
+            printf("%d\n", y_new);
+            printf("%d\n", t_new);
+            printf("===========\n");
         }
         x = x_new;
         y = y_new;
         t = t_new;
-        printf("%d\n", x);
-        printf("%d\n", y);
-        printf("%d\n", t);
-        printf("--------------\n");
+        // printf("%d\n", x);
+        // printf("%d\n", y);
+        // printf("%d\n", t);
+        // printf("--------------\n");
     }
 
     int radian = x; //store to location 5(MSW), 6(LSW)
