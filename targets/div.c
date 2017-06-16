@@ -3,40 +3,22 @@
 
 int main()
 {
-    signed int dividend = 20; //16 bit (signed)
-    signed int divisor = 3;  //8 bit (signed)
+    signed int dividend = 23130; //16 bit (signed)
+    signed int divisor = 120;  //8 bit (signed)
     signed int quotient = 0; //16 bit (signed)
     int div = 0; //16 bit
-    int divident_neg = 0;
-    int divisor_neg = 0;
     int divident_temp = 0; //16 bit
     int divisor_temp = 0; //8 bit
 
+
     quotient = 0; //16 bit
+
     if(divisor != 0){ //8 bit 0
         div = 0; //16 bit
-
-        // first if
-        if(dividend >> 15 == 1){  //if most sig bit is 1
-            divident_neg = 1; //1 bit
-            divident_temp = ~dividend + 1; //
-            printf("H1\n");
-        }else{
-            divident_neg = 0; //1 bit
-            divident_temp = dividend;
-            printf("H2\n");
-        }
-        //second if
-        if(divisor >> 7 == 1){
-            divisor_neg = 1; // 1 bit
-            divisor_temp = ~divisor + 1;
-            printf("H3\n");
-        }else{
-            divisor_neg = 0; // 1 bit
-            divisor_temp = divisor;
-            printf("H4\n");
-        }
-
+    
+        divident_temp = dividend;
+        divisor_temp = divisor;
+       
         // for start
         int i = 0;
         for(i = 0; i < 16; i++){
@@ -47,24 +29,17 @@ int main()
             //get div[14:0]
             int div = div << 1;
             div = div + shift;
-            printf("for loop %d\n", i);
-            printf("div: %d shift: %d\n", div, shift);
+            quotient = (quotient << 1);
+            
             // third if
+            printf("lala %d\n", i);
             if(div >= divisor_temp){
-                printf("bigger %d\n", i);
+                printf("Hereererererere\n");
                 div = div - divisor_temp;
-                quotient = (quotient << 1);
                 quotient = quotient + 1; // 1 is 1 bit
-                printf("div: %d quotient: %d\n", div, quotient);
-            }else{
-                printf("smaller %d\n", i);
-                quotient = (quotient << 1);
-                 printf("quotient: %d\n", quotient);
             }
-        }
-        if(divident_neg != divisor_neg){
-            printf("H5\n");
-            quotient = ~quotient + 1; //1 is 1 bit;
+            printf("%d\n", quotient);
+            
         }
     }
     printf("Hello World: %d", quotient);
