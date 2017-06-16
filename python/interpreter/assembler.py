@@ -70,7 +70,6 @@ endpackage
         type_def = ', \n'.join('LUT_{} = {}'.format(m.upper(), i) for m, i in types)
 
         lut_defs = []
-        cls.SV_ARR_TEMPLATE.format
         for i, lut in luts:
             lut = [str(lut.get(i, 0)) for i in range(cls.LUT_CAPACITY)]
             lut = cls.SV_ARR_TEMPLATE.format(', '.join(lut))
