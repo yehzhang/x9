@@ -75,12 +75,12 @@ module ControlUnit(
             I: begin
                 if(opcode == I_LW) begin
                     reg_i_a = {3'b0, instruction[5:5]};
-                    ctrl_reg_write = 0;
+                    ctrl_reg_write = 1;
                 end
                 else if(opcode == I_SW) begin
                     reg_i_write = {3'b0, instruction[5:5]};
                     reg_write_in = mem_out;
-                    ctrl_reg_write = 1;
+                    ctrl_reg_write = 0;
                 end
                 else if(opcode == I_SET) begin
                     reg_i_write = {3'b0, instruction[5:5]};
