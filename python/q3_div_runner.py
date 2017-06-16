@@ -29,10 +29,41 @@ class Debugger(Callback):
 
 
 def main():
-    mem_default = [0] * 256
-    mem_default[128] = 0x00
-    mem_default[129] = 0x6f
-    mem_default[130] = 0x70
+
+    f = 0
+
+    if f == 0:
+        mem_default = [0] * 256
+        mem_default[128] = 0x10 # 1000 => 4096
+        mem_default[129] = 0x00
+        mem_default[130] = 0x10 # 10 => 16
+
+    if f == 1:
+        mem_default = [0] * 256
+        mem_default[128] = 0x7F
+        mem_default[129] = 0xFF
+        mem_default[130] = 0x7F
+    
+    if f == 2:
+        mem_default = [0] * 256
+        mem_default[128] = 0x00
+        mem_default[129] = 0x6F
+        mem_default[130] = 0x70
+
+    if f == 3:
+        mem_default = [0] * 256
+        mem_default[128] = 0x01
+        mem_default[129] = 0x00
+        mem_default[130] = 0x10
+
+    if f == 4:
+        mem_default = [0] * 256
+        mem_default[128] = 0x5A
+        mem_default[129] = 0x5A
+        mem_default[130] = 0x78
+
+
+
     config = {
        'reg_default': 0,
        'mem_default': mem_default,
@@ -41,6 +72,8 @@ def main():
         Debugger(),
     ]
     Interpreter(config, cbs).load('../targets/div_x9.s').run()
+
+
 
 if __name__ == '__main__':
     main()
