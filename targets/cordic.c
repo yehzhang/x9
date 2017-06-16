@@ -45,7 +45,7 @@ int main(){
     // int x = 4096; //store in location 1(MSW), 2(LSW)
     // int y = 0; //store in location 3(MSW), 4(LSW)
     int x = 256;
-    int y = 80;
+    int y = 256;
     int x_new, y_new, t_new;
 
     int t = 0<<11; //12 bits
