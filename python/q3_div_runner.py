@@ -37,30 +37,36 @@ def main():
         mem_default[128] = 0x10 # 1000 => 4096
         mem_default[129] = 0x00
         mem_default[130] = 0x10 # 10 => 16
+        #256
+        result = 256
 
     if f == 1:
         mem_default = [0] * 256
-        mem_default[128] = 0x7F
+        mem_default[128] = 0x7F # 32767
         mem_default[129] = 0xFF
-        mem_default[130] = 0x7F
+        mem_default[130] = 0x7F # 127
+        result = 258
     
     if f == 2:
         mem_default = [0] * 256
-        mem_default[128] = 0x00
+        mem_default[128] = 0x00 # 111
         mem_default[129] = 0x6F
-        mem_default[130] = 0x70
+        mem_default[130] = 0x70 # 112
+        result = 0
 
     if f == 3:
         mem_default = [0] * 256
-        mem_default[128] = 0x01
+        mem_default[128] = 0x01 # 256
         mem_default[129] = 0x00
-        mem_default[130] = 0x10
+        mem_default[130] = 0x10 # 16
+        result = 16
 
     if f == 4:
         mem_default = [0] * 256
-        mem_default[128] = 0x5A
+        mem_default[128] = 0x5A # 23130
         mem_default[129] = 0x5A
-        mem_default[130] = 0x78
+        mem_default[130] = 0x78 # 120
+        result = 192
 
 
 
