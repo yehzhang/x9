@@ -70,7 +70,7 @@ def main(test_case):
        'mem_default': mem_default,
     }
     cbs = [
-        Debugger(),
+        # Debugger(),
     ]
     env = Interpreter(config, cbs).load('../targets/div_x9.s').run()
 
