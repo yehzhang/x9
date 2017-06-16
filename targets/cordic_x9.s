@@ -114,7 +114,7 @@ FORLOOP:
 
       mov r0, y2
       set r1, 0
-      blts ELSE_ONLY:
+      blt ELSE_ONLY:
 
 IF_ONLY:
 
