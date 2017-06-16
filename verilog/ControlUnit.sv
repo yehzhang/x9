@@ -75,7 +75,7 @@ module ControlUnit(
         unique case (inst_type)
             I: begin
                 if(opcode == I_LW) begin
-                    reg_i_a = {3'b0, instruction[5:5]};
+                    reg_i_write = {3'b0, instruction[5:5]};
                     reg_write_in = mem_out;
                     ctrl_reg_write = 1;
                 end
@@ -101,10 +101,15 @@ module ControlUnit(
                 ctrl_reg_write = 1;
             end
             R: begin
-                reg_i_a = 4'b0;
-                reg_i_b = 4'b1;
+                if(opcode == R_ADD && funct == FUN_LWR) begin
+                    reg_write_in = mem_out;
+                end
+                else begin
+                    reg_i_a = 4'b0;
+                    reg_i_b = 4'b1;
+                    reg_write_in = alu_out;
+                end
                 reg_i_write = instruction[5:2];
-                reg_write_in = alu_out;
                 ctrl_reg_write = 1;
             end
         endcase
