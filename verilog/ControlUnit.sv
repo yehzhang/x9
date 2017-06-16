@@ -75,11 +75,11 @@ module ControlUnit(
             I: begin
                 if(opcode == I_LW) begin
                     reg_i_a = {3'b0, instruction[5:5]};
+                    reg_write_in = mem_out;
                     ctrl_reg_write = 1;
                 end
                 else if(opcode == I_SW) begin
                     reg_i_write = {3'b0, instruction[5:5]};
-                    reg_write_in = mem_out;
                     ctrl_reg_write = 0;
                 end
                 else if(opcode == I_SET) begin
@@ -109,19 +109,25 @@ module ControlUnit(
         endcase
 
         // Memory logic
-        ctrl_mem_read = 0;
-        ctrl_mem_write = 0;
-        mem_addr_in = 0;
         if(opcode == I_LW) begin
             ctrl_mem_read = 1;
+            ctrl_mem_write = 0;
             mem_addr_in = lut_out;
-        end
-        else if(opcode == I_SW) begin
-            ctrl_mem_write = 1;
         end
         else if(opcode == R_ADD && funct == FUN_LWR) begin
             ctrl_mem_read = 1;
+            ctrl_mem_write = 0;
             mem_addr_in = reg_a; // R[0]
+        end
+        else if(opcode == I_SW) begin
+            ctrl_mem_read = 0;
+            ctrl_mem_write = 1;
+            mem_addr_in = lut_out;
+        end
+        else begin
+            ctrl_mem_read = 0;
+            ctrl_mem_write = 0;
+            mem_addr_in = 0;
         end
 
         // ALU logic
