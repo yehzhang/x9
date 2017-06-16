@@ -3,16 +3,22 @@ module ALU(
   // input cin,
   input ALU_CTRL ctrl_input,
   input [7:0] a, b,
+  input clk,
   output logic [7:0] out,
   // output logic cout,
   output logic zero
 );
-  logic alu_carry_bit;
+  logic alu_carry_out;
+  logic alu_carry_in;
+
+  always_ff @ (posedge clk) begin
+    alu_carry_in = alu_carry_out;
+  end
 
   always @(a, b, ctrl_input) begin
     unique case (ctrl_input)
-      ALU_ADD:  {alu_carry_bit, out} = a + b;
-      ALU_ADDC: {alu_carry_bit, out} = a + b + alu_carry_bit;
+      ALU_ADD:  {alu_carry_out, out} = a + b;
+      ALU_ADDC: {alu_carry_out, out} = a + b + alu_carry_in;
       ALU_SUB:  out = a - b;
       ALU_SLL:  out = $signed(b) >= 0 ? a << b : a >> $unsigned(-$signed(b));
       // Max shamt 16

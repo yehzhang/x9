@@ -139,7 +139,7 @@ module ControlUnit(
         end
 
         // ALU logic
-        ctrl_alu_input = ALU_ADD;
+        ctrl_alu_input = ALU_SUB;
         unique case (opcode)
             R_ADD: unique case (funct)
                 FUN_ADD: ctrl_alu_input = ALU_ADD;

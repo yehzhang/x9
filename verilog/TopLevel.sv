@@ -107,6 +107,7 @@ module TopLevel(
         .ctrl_input(ctrl_alu_input),
         .a(reg_a),
         .b(reg_b),
+        .clk,
         .out(alu_out),
         // .cout(alu_carry_bit),
         .zero(alu_zero)
