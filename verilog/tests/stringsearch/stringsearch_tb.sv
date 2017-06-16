@@ -28,6 +28,7 @@ initial begin
   #10ns  start = 1'b1;
   #10ns for (int i=0; i<256; i++)    // clear data memory
         DUT.data_mem1.my_memory[i] = 8'b0;
+
 // you may preload any desired constants into your data_mem here
 //    ...
 // now declare the searchable string and the 4-bit pattern itself
@@ -37,10 +38,16 @@ initial begin
   DUT.data_mem1.my_memory[9] = {4'b0,sequence1};  // load "Waldo"
 // load string to be searched -- watch Endianness
   for(int i=0; i<64; i++)
-    DUT.data_mem1.my_memory[i+32] = string1[8*i+:8];
+    DUT.data_mem1.my_memory[95-i] = string1[7+8*i-:8];
 // clear reg. file -- you may load any constants you wish here
   for(int i=0; i<16; i++)
-  DUT.reg_file1.registers[i] = 8'b0;
+  DUT.reg_file1.registers[i] = i + 1;
+
+
+  // Load constants
+  DUT.data_mem1.my_memory[255] = 255;
+
+
 // load instruction ROM -- unfilled elements will get x's -- should be harmless
   $readmemb("./lab4/verilog/tests/stringsearch/machine_code.txt",DUT.instr_ROM1.instructions);
 //  $monitor ("string=%b,sequence=%b,count=%d\n",string1, sequence1, count);
@@ -50,6 +57,8 @@ initial begin
   #10ns  $display(count_beh,,,count_DUT);
   if(count_beh == count_DUT)   // score another successful trial
     score++;
+  else
+    score *= -1;
   #10ns;
 // shall we have another go?
   #10ns start = 1'b1;
@@ -59,10 +68,17 @@ initial begin
   DUT.data_mem1.my_memory[9] = {4'b0,sequence1};  // load "Waldo"
 // load string to be searched -- watch Endianness
   for(int i=0; i<64; i++)
-    DUT.data_mem1.my_memory[i+32] = string1[8*i+:8];
+    DUT.data_mem1.my_memory[95-i] = string1[7+8*i-:8];
 // clear reg. file -- you may load any constants you wish here
   for(int i=0; i<16; i++)
   DUT.reg_file1.registers[i] = 8'b0;
+
+
+
+  // Load constants
+  DUT.data_mem1.my_memory[255] = 255;
+
+
 // load instruction ROM -- unfilled elements will get x's -- should be harmless
   $readmemb("./lab4/verilog/tests/stringsearch/machine_code.txt",DUT.instr_ROM1.instructions);
 //  $monitor ("string=%b,sequence=%b,count=%d\n",string1, sequence1, count);
@@ -72,6 +88,8 @@ initial begin
   #10ns  $display(count_beh,,,count_DUT);
   if(count_beh == count_DUT)   // score another successful trial
     score++;
+  else
+    score *= -1;
   #10ns;
 
 // one more time!
@@ -82,10 +100,17 @@ initial begin
   DUT.data_mem1.my_memory[9] = {4'b0,sequence1};  // load "Waldo"
 // load string to be searched -- watch Endianness
   for(int i=0; i<64; i++)
-    DUT.data_mem1.my_memory[i+32] = string1[8*i+:8];
+    DUT.data_mem1.my_memory[95-i] = string1[7+8*i-:8];
 // clear reg. file -- you may load any constants you wish here
   for(int i=0; i<16; i++)
   DUT.reg_file1.registers[i] = 8'b0;
+
+
+
+  // Load constants
+  DUT.data_mem1.my_memory[255] = 255;
+
+
 // load instruction ROM -- unfilled elements will get x's -- should be harmless
   $readmemb("./lab4/verilog/tests/stringsearch/machine_code.txt",DUT.instr_ROM1.instructions);
 //  $monitor ("string=%b,sequence=%b,count=%d\n",string1, sequence1, count);
@@ -95,6 +120,8 @@ initial begin
   #10ns  $display(count_beh,,,count_DUT);
   if(count_beh == count_DUT)   // score another successful trial
     score++;
+  else
+    score *= -1;
   #10ns      $stop;
 end
 
