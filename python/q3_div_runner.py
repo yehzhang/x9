@@ -46,7 +46,7 @@ def main():
         mem_default[129] = 0xFF
         mem_default[130] = 0x7F # 127
         result = 258
-    
+
     if f == 2:
         mem_default = [0] * 256
         mem_default[128] = 0x00 # 111
@@ -69,6 +69,10 @@ def main():
         result = 192
 
 
+    mem_default = [0] * 256
+    mem_default[128] = dividend_MSB
+    mem_default[129] = dividend_LSB
+    mem_default[130] = divisor
 
     config = {
        'reg_default': 0,
