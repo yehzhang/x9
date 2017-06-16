@@ -42,7 +42,7 @@ endpackage
         # Save machine code
         lines = [(inst.as_code('machine_code'), inst.as_code('asm')) for inst in self.insts]
         mc_width = max(len(mc) for mc, _ in lines)
-        text = '\n'.join('{} // {}'.format(mc.ljust(mc_width), asm) for mc, asm in lines)
+        text = '\n'.join('{} // {}'.format(mc.ljust(mc_width), asm.splitlines()[0]) for mc, asm in lines)
         self.save(text, out_dir, 'machine_code.txt')
 
         # Save LUT definitions
