@@ -9,7 +9,7 @@ module ALU(
 );
   logic alu_carry_bit;
 
-  always @(*) begin
+  always @(a, b, ctrl_input) begin
     unique case (ctrl_input)
       ALU_ADD:  {alu_carry_bit, out} = a + b;
       ALU_ADDC: {alu_carry_bit, out} = a + b + alu_carry_bit;
