@@ -77,4 +77,4 @@ class Interpreter(Environmental):
             for cb in self.callbacks:
                 cb.on_instruction_end(inst, self.env)
 
-        print(self.env)
+        return self.env
