@@ -26,33 +26,55 @@ define x2 r14
 
 
       # set i = 4 first
-      # set r0, 4
-      # add i
-      # lw r0, 1
-      # add x1
-      # lw r0, 2
-      # add x2
-      # srlc x1, x2, i, x1, x2
+      set r0, 4
+      add i
+      lw r0, 1
+      add x1
+      lw r0, 2
+      add x2
+      mov r0, x2
+      mov r1, i
+      srl r2
+      set r0, 8
+      sub r1
+      mov r0, x1
+      sll r1
+      mov r0, r2
+      or x2
+      mov r0, x1
+      mov r1, i
+      sra x1
 
 
 
-      # mov r0, x1
-      # mov r1, x2
-      # sw r0, 1
-      # sw r1, 2
+      mov r0, x1
+      mov r1, x2
+      sw r0, 1
+      sw r1, 2
 
 
 
-      # set r1, 0
-      # lw r0, 3
-      # add y1
-      # lw r0, 4
-      # add y2
-      # srlc y1, y2, i, y1, y2
-      # mov r0, y1
-      # mov r1, y2
-      # sw r0, 3
-      # sw r1, 4
+      set r1, 0
+      lw r0, 3
+      add y1
+      lw r0, 4
+      add y2
+      mov r0, y2
+      mov r1, i
+      srl r2
+      set r0, 8
+      sub r1
+      mov r0, y1
+      sll r1
+      mov r0, r2
+      or y2
+      mov r0, y1
+      mov r1, i
+      sra y1
+      mov r0, y1
+      mov r1, y2
+      sw r0, 3
+      sw r1, 4
 
 
       # set i back to zero
@@ -84,8 +106,11 @@ FORLOOP:
       set r1, 0
       blts ELSE_ONLY:
 
+      # add r15
+
       bne IF_ONLY:
 
+      # add r15
 
       mov r0, y2
       set r1, 0
@@ -94,7 +119,6 @@ FORLOOP:
 IF_ONLY:
 
       #x_new = x + (y>>i);
-      # srlc y1, y2, i, r2, temp # y1, y2 equal to after shifted values
       mov r0, y2
       mov r1, i
       srl r2
@@ -107,7 +131,6 @@ IF_ONLY:
       mov r0, y1
       mov r1, i
       sra r2 # y1, y2 equal to after shifted values
-
       mov r0, temp
       mov r1, x2 # r1 = x2
       add x_new2 # x_new2 = y2+x2
@@ -128,8 +151,6 @@ IF_ONLY:
       adc temp1 # temp1 = -x1+carry in case there is carrybit
 
 
-      # srlc temp1, temp2, i, r2, temp
-
       mov r0, temp2
       mov r1, i
       srl r2
@@ -142,7 +163,6 @@ IF_ONLY:
       mov r0, temp1
       mov r1, i
       sra r2
-
       mov r0, temp
       mov r1, y2 # add y2+ ((-x)>>i)'s LSB
       add y2
@@ -153,7 +173,7 @@ IF_ONLY:
       # add r15
 
       #t_new = t + (1<<(11-i));
-      set r0, 15
+      set r0, 11
       mov r1, i
       sub temp1  #(11-i)
 
@@ -164,7 +184,6 @@ IF_ONLY:
       add temp
 
 
-      # sllc temp2, temp, temp1, r2, temp # 0,1<<(11-i)
       mov r0, temp2
       mov r1, temp1
       sll r2
@@ -177,7 +196,6 @@ IF_ONLY:
       mov r0, temp
       mov r1, temp1
       sll temp # 0,1<<(11-i)
-
 
       mov r0, temp
       mov r1, t2
@@ -205,7 +223,6 @@ ELSE_ONLY:
 
 
       # -y>>i
-      # srlc temp1, temp2, i, r2, temp # temp1, temp1 equal to after shifted values
       mov r0, temp2
       mov r1, i
       srl r2
@@ -217,8 +234,7 @@ ELSE_ONLY:
       or temp
       mov r0, temp1
       mov r1, i
-      sra r2
-
+      sra r2 # temp1, temp1 equal to after shifted values
       mov r0, temp
       mov r1, x2 # r1 = x2
       add x_new2 # x_new2 = y2+x2
@@ -229,8 +245,6 @@ ELSE_ONLY:
 
 
       # y_new = y + (x>>i);
-      # srlc x1, x2, i, r2, temp
-
       mov r0, x2
       mov r1, i
       srl r2
@@ -243,8 +257,6 @@ ELSE_ONLY:
       mov r0, x1
       mov r1, i
       sra r2
-
-
       mov r0, temp
       mov r1, y2 # add y2+ ((x)>>i)'s LSB
       add y2
@@ -254,7 +266,7 @@ ELSE_ONLY:
 
 
       #t_new = t - (1<<(11-i));
-      set r0, 15
+      set r0, 11
       mov r1, i
       sub temp1  #(11-i)
       set r0, 0
@@ -262,8 +274,7 @@ ELSE_ONLY:
       add temp2
       set r1, 1
       add temp
-      # sllc temp2, temp, temp1, r2, r0 # 1<<(11-i)
-                  mov r0, temp2
+            mov r0, temp2
       mov r1, temp1
       sll r2
       set r0, 8
@@ -274,7 +285,7 @@ ELSE_ONLY:
       or r2
       mov r0, temp
       mov r1, temp1
-      sll r0
+      sll r0 # 1<<(11-i)
 
       #negate temp1, temp2
       neg r0 # negate 1<<(11-i) LSB
@@ -318,42 +329,57 @@ ASSIGN:
       beq FORLOOP:
 
 END:
-      # # store radian x
-      # set r0, 0
-      # set r1, 4
-      # add i # i = 4
+      # store radian x
+      set r0, 0
+      set r1, 4
+      add i # i = 4
 
-      # set r1, 0
-      # lw r0, 1
-      # add x1
-      # lw r0, 2
-      # add x2
+      set r1, 0
+      lw r0, 1
+      add x1
+      lw r0, 2
+      add x2
 
-      # # add r15
+      # add r15
 
-      # sllc x1, x2, i, x1, x2
-      # mov r0, x1
-      # mov r1, x2
-      # sw r0, 5
-      # sw r1, 6
+            mov r0, x1
+      mov r1, i
+      sll r2
+      set r0, 8
+      sub r1
+      mov r0, x2
+      srl r1
+      mov r0, r2
+      or x1
+      mov r0, x2
+      mov r1, i
+      sll x2
+      mov r0, x1
+      mov r1, x2
+      sw r0, 5
+      sw r1, 6
 
-      # #store theta t
-      # sllc t1, t2, i, t1, t2
+      #store theta t
+            mov r0, t1
+      mov r1, i
+      sll r2
+      set r0, 8
+      sub r1
+      mov r0, t2
+      srl r1
+      mov r0, r2
+      or t1
+      mov r0, t2
+      mov r1, i
+      sll t2
 
-      # mov r0, t1
-      # mov r1, t2
-      # sw r0, 7
-      # sw r1, 8
-
-      lw r0,1
-      sw r0,5
-      lw r0,2
-      sw r0,6
-      mov r0,t1
-      sw r0,7
-      mov r0,t2
-      sw r0,8
+      mov r0, t1
+      mov r1, t2
+      sw r0, 7
+      sw r1, 8
 
       add r15
 
       halt r0
+
+
