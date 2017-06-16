@@ -1,10 +1,11 @@
 /* Hello World program */
-#include<stdio.h>
+#include <stdio.h>
 
 int main()
 {
     signed int dividend = 23130; //16 bit (signed)
     signed int divisor = 120;  //8 bit (signed)
+
     signed int quotient = 0; //16 bit (signed)
     int div = 0; //16 bit
     int divident_temp = 0; //16 bit
@@ -15,10 +16,10 @@ int main()
 
     if(divisor != 0){ //8 bit 0
         div = 0; //16 bit
-    
+
         divident_temp = dividend;
         divisor_temp = divisor;
-       
+
         // for start
         int i = 0;
         for(i = 0; i < 16; i++){
@@ -30,7 +31,7 @@ int main()
             int div = div << 1;
             div = div + shift;
             quotient = (quotient << 1);
-            
+
             // third if
             printf("lala %d\n", i);
             if(div >= divisor_temp){
@@ -39,8 +40,7 @@ int main()
                 quotient = quotient + 1; // 1 is 1 bit
             }
             printf("%d\n", quotient);
-            
         }
     }
-    printf("Hello World: %d", quotient);
+    printf("Hello World: %d\n", quotient);
 }

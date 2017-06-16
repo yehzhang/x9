@@ -30,7 +30,7 @@
 # THIRD_ELSE
 
 define temp                 r3
-define temp2                r4      
+define temp2                r4
 define temp3                r5      #(shift)
 define quotient_MSW         r6      #(set)
 define quotient_LSW         r7      #(set)
@@ -74,7 +74,7 @@ START:
     set r1, 0
     add divident_temp_LSW
     lw r0, DIVIDEND_ADDR_MSW
-    add divident_temp_MSW  
+    add divident_temp_MSW
 
     # divisor_temp = divisor;
     lw r1, DIVISOR_ADDR
@@ -170,7 +170,7 @@ FOR_LOOP_START:
 
     # if(div >= divisor_temp){  // check div < divisor_temp
     # compare upper MSB with 0, if MSB < 0, then it's negative
-    
+
     mov r0, div_MSW
     set r1, 0
     blts CHECK_I
@@ -178,6 +178,7 @@ FOR_LOOP_START:
     mov r0, div_LSW
     mov r1, divisor_temp
     blts CHECK_I # if we didn't branch, then div >= divisor_temp
+
     # div = div - divisor_temp;
     # first: extend bit for divisor_temp
     set r0, 0
@@ -200,7 +201,7 @@ FOR_LOOP_START:
     adc temp2
     # finally, div = div + (- divisor_temp); = div + (temp2, temp3)
     mov r0, div_LSW
-    mov r1, temp3 
+    mov r1, temp3
     add div_LSW
     mov r1, div_MSW
     mov r0, temp2
@@ -218,7 +219,7 @@ CHECK_I:
     set r0, FIFTEEN
     mov r1, i
     bne FOR_LOOP_START
-    # end of for loop  
+    # end of for loop
 
 IF_EXIT:
     # store back into 126(MSW), 127(LSW)
