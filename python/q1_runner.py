@@ -56,9 +56,11 @@ def main(test_case):
     cbs = [
         # Debugger(),
     ]
-    env = Interpreter(config, cbs).load('../targets/cordic_x9.s').run()
+    env = Interpreter(config, cbs).load('../targets/cordic_old.s').run()
 
-    print('R & Theta are', env.memory.load(5, 2) >> 4, env.memory.load(7, 2) >> 4, 'should be', radian, theta)
+
+    print('R & Theta are', env.memory.load(5, 2), env.memory.load(7, 2), 'should be', radian, theta)
+    # print('R & Theta are', env.memory.load(5, 2) >> 4, env.memory.load(7, 2) >> 4, 'should be', radian, theta)
     # print()
 
 if __name__ == '__main__':

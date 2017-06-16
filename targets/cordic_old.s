@@ -153,7 +153,7 @@ IF_ONLY:
       # add r15
 
       #t_new = t + (1<<(11-i));
-      set r0, 12
+      set r0, 15
       mov r1, i
       sub temp1  #(11-i)
 
@@ -254,7 +254,7 @@ ELSE_ONLY:
 
 
       #t_new = t - (1<<(11-i));
-      set r0, 12
+      set r0, 15
       mov r1, i
       sub temp1  #(11-i)
       set r0, 0

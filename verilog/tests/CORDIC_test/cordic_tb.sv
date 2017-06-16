@@ -35,14 +35,14 @@ initial begin
 // case 1
   x = 12'h100;
   y = 12'h100;
-  // DUT.data_mem1.core[1] = x[11:4];
-  // DUT.data_mem1.core[2] = {x[3:0],4'h0};
-  // DUT.data_mem1.core[3] = y[11:4];
-  // DUT.data_mem1.core[4] = {y[3:0],4'h0};
   DUT.data_mem1.my_memory[1] = x[11:4];
   DUT.data_mem1.my_memory[2] = {x[3:0],4'h0};
   DUT.data_mem1.my_memory[3] = y[11:4];
   DUT.data_mem1.my_memory[4] = {y[3:0],4'h0};
+  // DUT.data_mem1.my_memory[1] = {4'b0, x[11:8]};
+  // DUT.data_mem1.my_memory[2] = x[7:0];
+  // DUT.data_mem1.my_memory[3] = {4'b0, y[11:8]};
+  // DUT.data_mem1.my_memory[4] = y[7:0];
 
 // clear reg. file -- you may load any constants you wish here
   for(int i=0; i<16; i++)
@@ -58,7 +58,7 @@ initial begin
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial
-    scoreR++;
+    scoreT++;
 
 // case 2
   #10ns  start = 1'b1;
@@ -83,7 +83,7 @@ initial begin
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial
-    scoreR++;
+    scoreT++;
 
 // case 3
   #10ns  start = 1'b1;
@@ -108,7 +108,7 @@ initial begin
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial
-    scoreR++;
+    scoreT++;
 
   // case 4
   #10ns  start = 1'b1;
@@ -133,7 +133,7 @@ initial begin
   if(r_beh >= (r_DUT-1) && r_beh <= (r_DUT+1))   // score another successful trial
     scoreR++;
   if(t_beh >= (t_DUT-1) && t_beh <= (t_DUT+1))   // score another successful trial
-    scoreR++;
+    scoreT++;
 
 
   #10ns $stop;

@@ -106,11 +106,11 @@ FORLOOP:
       set r1, 0
       blts ELSE_ONLY:
 
-      add r15
+      # add r15
 
       bne IF_ONLY:
 
-      add r15
+      # add r15
 
       mov r0, y2
       set r1, 0
@@ -321,7 +321,7 @@ ASSIGN:
       sw r0, 3
       sw r1, 4
 
-      add r15
+      # add r15
 
       # go back to for loop
       set r0, 0
