@@ -5,6 +5,7 @@ module ControlUnit(
     input wire[8:0] instruction,
 
     input [7:0] mem_out,
+    output logic[7:0] mem_in,
     output logic[7:0] mem_addr_in,
     output logic ctrl_mem_read,
     output logic ctrl_mem_write,
@@ -79,7 +80,7 @@ module ControlUnit(
                     ctrl_reg_write = 1;
                 end
                 else if(opcode == I_SW) begin
-                    reg_i_write = {3'b0, instruction[5:5]};
+                    reg_i_a = {3'b0, instruction[5:5]};
                     ctrl_reg_write = 0;
                 end
                 else if(opcode == I_SET) begin
@@ -109,6 +110,7 @@ module ControlUnit(
         endcase
 
         // Memory logic
+        mem_in = alu_out;
         if(opcode == I_LW) begin
             ctrl_mem_read = 1;
             ctrl_mem_write = 0;
@@ -123,6 +125,7 @@ module ControlUnit(
             ctrl_mem_read = 0;
             ctrl_mem_write = 1;
             mem_addr_in = lut_out;
+            mem_in = reg_a;
         end
         else begin
             ctrl_mem_read = 0;
