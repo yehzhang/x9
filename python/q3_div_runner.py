@@ -9,11 +9,10 @@ class Debugger(Callback):
     def on_instruction_begin(self, inst, env):
         text = str(inst)
         print(text)
-        if text in ('mov r0, i'):
+        if text in ('blts CHECK_I:', 'mov r0, divisor_temp', 'mov r0, quotient_LSW'):
             print(env)
             print(text)
             set_trace()
-            pass
         return
 
     def on_instruction_end(self, inst, env):
@@ -27,7 +26,7 @@ class Debugger(Callback):
         pass
 
 
-def main(test_case):
+def main(test_case=1):
     if test_case == 0:
         dividend_MSB = 0x10 # 1000 => 4096
         dividend_LSB = 0x00
@@ -82,3 +81,4 @@ def main(test_case):
 if __name__ == '__main__':
     for i in range(5):
         main(i)
+    # main()
