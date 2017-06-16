@@ -100,7 +100,19 @@ FOR_LOOP_START:
     sub temp3 # shift
 
     # shift = divident_temp >> shift;
-    srlc divident_temp_MSW, divident_temp_LSW, temp3, r0, r2
+    	mov r0, divident_temp_LSW
+ 	mov r1, temp3
+ 	srl r2
+ 	set r0, 8
+ 	sub r1
+ 	mov r0, divident_temp_MSW
+ 	sll r1
+ 	mov r0, r2
+ 	or r2
+ 	mov r0, divident_temp_MSW
+ 	mov r1, temp3
+ 	sra r0
+
 
     # shift = shift & 1;
     mov r1, r2
@@ -111,7 +123,20 @@ FOR_LOOP_START:
     set r0, 1
     set r1, 0
     add temp
-    sllc div_MSW, div_LSW, temp, div_MSW, div_LSW
+    	mov r0, div_MSW
+ 	mov r1, temp
+ 	sll r2
+ 	set r0, 8
+ 	sub r1
+ 	mov r0, div_LSW
+ 	srl r1
+ 	mov r0, r2
+ 	or div_MSW
+ 	mov r0, div_LSW
+ 	mov r1, temp
+ 	sll div_LSW
+
+
 
     # div = div + shift;
     mov r0, temp3
@@ -125,7 +150,20 @@ FOR_LOOP_START:
     set r0, 1
     set r1, 0
     add r3
-    sllc quotient_MSW, quotient_LSW, r3, quotient_MSW, quotient_LSW
+    	mov r0, quotient_MSW
+ 	mov r1, r3
+ 	sll r2
+ 	set r0, 8
+ 	sub r1
+ 	mov r0, quotient_LSW
+ 	srl r1
+ 	mov r0, r2
+ 	or quotient_MSW
+ 	mov r0, quotient_LSW
+ 	mov r1, r3
+ 	sll quotient_LSW
+
+
 
     # if(div >= divisor_temp){  // check div < divisor_temp
     # compare upper MSB with 0, if MSB < 0, then it's negative
