@@ -89,12 +89,25 @@ FORLOOP:
 
       mov r0, y2
       set r1, 0
-      blts ELSE_ONLY:
+      blt ELSE_ONLY:
 
 IF_ONLY:
 
       #x_new = x + (y>>i);
-      srlc y1, y2, i, r2, temp # y1, y2 equal to after shifted values
+      # srlc y1, y2, i, r2, temp # y1, y2 equal to after shifted values
+      mov r0, y2
+      mov r1, i
+      srl r2
+      set r0, 8
+      sub r1
+      mov r0, y1
+      sll r1
+      mov r0, r2
+      or temp
+      mov r0, y1
+      mov r1, i
+      sra r2 # y1, y2 equal to after shifted values
+
       mov r0, temp
       mov r1, x2 # r1 = x2
       add x_new2 # x_new2 = y2+x2
@@ -107,7 +120,7 @@ IF_ONLY:
       # y_new = y + ((-x)>>i);
       mov r0, x2
       neg r0  #r0 = -x2
-      set r1, 16
+      set r1, 1
       add temp2 # add -x2+1, 2's complement
       mov r0, x1
       neg r0
@@ -115,7 +128,21 @@ IF_ONLY:
       adc temp1 # temp1 = -x1+carry in case there is carrybit
 
 
-      srlc temp1, temp2, i, r2, temp
+      # srlc temp1, temp2, i, r2, temp
+
+      mov r0, temp2
+      mov r1, i
+      srl r2
+      set r0, 8
+      sub r1
+      mov r0, temp1
+      sll r1
+      mov r0, r2
+      or temp
+      mov r0, temp1
+      mov r1, i
+      sra r2
+
       mov r0, temp
       mov r1, y2 # add y2+ ((-x)>>i)'s LSB
       add y2
@@ -126,7 +153,7 @@ IF_ONLY:
       # add r15
 
       #t_new = t + (1<<(11-i));
-      set r0, 11
+      set r0, 12
       mov r1, i
       sub temp1  #(11-i)
 
@@ -137,7 +164,20 @@ IF_ONLY:
       add temp
 
 
-     sllc temp2, temp, temp1, r2, temp # 0,1<<(11-i)
+      # sllc temp2, temp, temp1, r2, temp # 0,1<<(11-i)
+      mov r0, temp2
+      mov r1, temp1
+      sll r2
+      set r0, 8
+      sub r1
+      mov r0, temp
+      srl r1
+      mov r0, r2
+      or r2
+      mov r0, temp
+      mov r1, temp1
+      sll temp # 0,1<<(11-i)
+
 
       mov r0, temp
       mov r1, t2
@@ -156,7 +196,7 @@ ELSE_ONLY:
       #x_new = x + ((-y)>>i);
       mov r0, y2
       neg r0  #r0 = -y2
-      set r1, 16
+      set r1, 1
       add temp2 # temp2 = -x2+1
       mov r0, y1
       neg r0 # r0 = -y1
@@ -165,7 +205,20 @@ ELSE_ONLY:
 
 
       # -y>>i
-      srlc temp1, temp2, i, r2, temp # temp1, temp1 equal to after shifted values
+      # srlc temp1, temp2, i, r2, temp # temp1, temp1 equal to after shifted values
+      mov r0, temp2
+      mov r1, i
+      srl r2
+      set r0, 8
+      sub r1
+      mov r0, temp1
+      sll r1
+      mov r0, r2
+      or temp
+      mov r0, temp1
+      mov r1, i
+      sra r2
+
       mov r0, temp
       mov r1, x2 # r1 = x2
       add x_new2 # x_new2 = y2+x2
@@ -176,7 +229,22 @@ ELSE_ONLY:
 
 
       # y_new = y + (x>>i);
-      srlc x1, x2, i, r2, temp
+      # srlc x1, x2, i, r2, temp
+
+      mov r0, x2
+      mov r1, i
+      srl r2
+      set r0, 8
+      sub r1
+      mov r0, x1
+      sll r1
+      mov r0, r2
+      or temp
+      mov r0, x1
+      mov r1, i
+      sra r2
+
+
       mov r0, temp
       mov r1, y2 # add y2+ ((x)>>i)'s LSB
       add y2
@@ -186,7 +254,7 @@ ELSE_ONLY:
 
 
       #t_new = t - (1<<(11-i));
-      set r0, 11
+      set r0, 12
       mov r1, i
       sub temp1  #(11-i)
       set r0, 0
@@ -194,11 +262,23 @@ ELSE_ONLY:
       add temp2
       set r1, 1
       add temp
-      sllc temp2, temp, temp1, r2, r0 # 1<<(11-i)
+      # sllc temp2, temp, temp1, r2, r0 # 1<<(11-i)
+                  mov r0, temp2
+      mov r1, temp1
+      sll r2
+      set r0, 8
+      sub r1
+      mov r0, temp
+      srl r1
+      mov r0, r2
+      or r2
+      mov r0, temp
+      mov r1, temp1
+      sll r0
 
       #negate temp1, temp2
       neg r0 # negate 1<<(11-i) LSB
-      set r1, 16
+      set r1, 1
       add temp2 # temp2 = -1<<(11-i) LSB+1
       mov r0, r2
       neg r0
