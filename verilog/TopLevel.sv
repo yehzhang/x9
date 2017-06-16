@@ -13,6 +13,7 @@ module TopLevel(
 
 
     wire[7:0] mem_out;
+    wire[7:0] mem_in;
     wire[7:0] mem_addr_in;
     wire ctrl_mem_read;
     wire ctrl_mem_write;
@@ -50,6 +51,7 @@ module TopLevel(
     ControlUnit CU(
         .instruction,
         .mem_out,
+        .mem_in,
         .mem_addr_in,
         .ctrl_mem_read,
         .ctrl_mem_write,
@@ -125,7 +127,7 @@ module TopLevel(
         .addr(mem_addr_in),
         .ctrl_mem_read(ctrl_mem_read),
         .ctrl_mem_write(ctrl_mem_write),
-        .data_in(alu_out),
+        .data_in(mem_in),
         .data_out(mem_out),
         .clk
     );
