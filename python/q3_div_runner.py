@@ -7,66 +7,57 @@ class Debugger(Callback):
         self.has_met = False
 
     def on_instruction_begin(self, inst, env):
-        # text = str(inst)
-        # print(text)
-        # if text in ('set r0, FIFTEEN', 'sw r0, RETURN_ADDR'):
-        #     print(env)
-        #     set_trace()
-        #     pass
-        return
-
-    def on_instruction_end(self, inst, env):
         text = str(inst)
         print(text)
-        #'set r0, FIFTEEN', 'sw r0, RETURN_ADDR'
-        if text in ('set r1, 28'):
+        if text in ('mov r0, i'):
             print(env)
+            print(text)
             set_trace()
             pass
         return
 
-        return
+    def on_instruction_end(self, inst, env):
+        # text = str(inst)
+        # print(text)
+        # #'set r0, FIFTEEN', 'sw r0, RETURN_ADDR'
+        # if text in ('set r1, 28'):
+        #     print(env)
+        #     set_trace()
+        #     pass
+        pass
 
 
-def main():
-
-    f = 0
-
-    if f == 0:
-        mem_default = [0] * 256
-        mem_default[128] = 0x10 # 1000 => 4096
-        mem_default[129] = 0x00
-        mem_default[130] = 0x10 # 10 => 16
+def main(test_case):
+    if test_case == 0:
+        dividend_MSB = 0x10 # 1000 => 4096
+        dividend_LSB = 0x00
+        divisor = 0x10 # 10 => 16
         #256
-        result = 256
+        solution = 256
 
-    if f == 1:
-        mem_default = [0] * 256
-        mem_default[128] = 0x7F # 32767
-        mem_default[129] = 0xFF
-        mem_default[130] = 0x7F # 127
-        result = 258
+    if test_case == 1:
+        dividend_MSB = 0x7F # 32767
+        dividend_LSB = 0xFF
+        divisor = 0x7F # 127
+        solution = 258
 
-    if f == 2:
-        mem_default = [0] * 256
-        mem_default[128] = 0x00 # 111
-        mem_default[129] = 0x6F
-        mem_default[130] = 0x70 # 112
-        result = 0
+    if test_case == 2:
+        dividend_MSB = 0x00 # 111
+        dividend_LSB = 0x6F
+        divisor = 0x70 # 112
+        solution = 0
 
-    if f == 3:
-        mem_default = [0] * 256
-        mem_default[128] = 0x01 # 256
-        mem_default[129] = 0x00
-        mem_default[130] = 0x10 # 16
-        result = 16
+    if test_case == 3:
+        dividend_MSB = 0x01 # 256
+        dividend_LSB = 0x00
+        divisor = 0x10 # 16
+        solution = 16
 
-    if f == 4:
-        mem_default = [0] * 256
-        mem_default[128] = 0x5A # 23130
-        mem_default[129] = 0x5A
-        mem_default[130] = 0x78 # 120
-        result = 192
+    if test_case == 4:
+        dividend_MSB = 0x5A # 23130
+        dividend_LSB = 0x5A
+        divisor = 0x78 # 120
+        solution = 192
 
 
     mem_default = [0] * 256
@@ -81,9 +72,13 @@ def main():
     cbs = [
         Debugger(),
     ]
-    Interpreter(config, cbs).load('../targets/div_x9.s').run()
+    env = Interpreter(config, cbs).load('../targets/div_x9.s').run()
+
+    result = env.memory.load(126, 2, True)
+    print('Result is', result, 'should be', solution)
 
 
 
 if __name__ == '__main__':
-    main()
+    for i in range(5):
+        main(i)
