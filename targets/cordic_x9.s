@@ -24,7 +24,6 @@ define x2 r14
       add t1
       add t2
 
-      add r15
 
       # set i = 4 first
       set r0, 4
@@ -47,14 +46,12 @@ define x2 r14
 	sra x1
 
 
-      add r15
 
       mov r0, x1
       mov r1, x2
       sw r0, 1
       sw r1, 2
 
-      add r15
 
 
       set r1, 0
@@ -79,14 +76,12 @@ define x2 r14
       sw r0, 3
       sw r1, 4
 
-      add r15
 
       # set i back to zero
       set r0, 0
       set r1, 0
       add i
 
-      add r15
 
 FORLOOP:
       #compare i with 12
@@ -189,11 +184,11 @@ IF_ONLY:
      	mov r0, temp2
  	mov r1, temp1
  	sll r2
- 	set r0 8
+ 	set r0, 8
  	sub r1
  	mov r0, temp
  	srl r1
- 	mov r0 r2
+ 	mov r0, r2
  	or r2
  	mov r0, temp
  	mov r1, temp1
@@ -279,11 +274,11 @@ ELSE_ONLY:
       	mov r0, temp2
  	mov r1, temp1
  	sll r2
- 	set r0 8
+ 	set r0, 8
  	sub r1
  	mov r0, temp
  	srl r1
- 	mov r0 r2
+ 	mov r0, r2
  	or r2
  	mov r0, temp
  	mov r1, temp1
@@ -347,11 +342,11 @@ END:
       	mov r0, x1
  	mov r1, i
  	sll r2
- 	set r0 8
+ 	set r0, 8
  	sub r1
  	mov r0, x2
  	srl r1
- 	mov r0 r2
+ 	mov r0, r2
  	or x1
  	mov r0, x2
  	mov r1, i
@@ -365,11 +360,11 @@ END:
       	mov r0, t1
  	mov r1, i
  	sll r2
- 	set r0 8
+ 	set r0, 8
  	sub r1
  	mov r0, t2
  	srl r1
- 	mov r0 r2
+ 	mov r0, r2
  	or t1
  	mov r0, t2
  	mov r1, i
