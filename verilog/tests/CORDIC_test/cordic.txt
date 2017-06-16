@@ -3,6 +3,7 @@
 111100000                                                                                                               // set r1, 0
 000100000                                                                                                               // add t1
 000100100                                                                                                               // add t2
+000111100                                                                                                               // add r15
 111000100                                                                                                               // set r0, 4
 000101000                                                                                                               // add i
 001000000                                                                                                               // lw r0, 1
@@ -21,21 +22,12 @@
 100110100
 100101010
 101110101 // mov r0, x2
-mov r1, i
-srl r2
-set r0, 8
-sub r1
-mov r0, x1
-sll r1
-mov r0, r2
-or x2
-mov r0, x1
-mov r1, i
-sra x1
+000111100                                                                                                               // add r15
 100110100                                                                                                               // mov r0, x1
 100111010                                                                                                               // mov r1, x2
 010000000                                                                                                               // sw r0, 1
 010100001                                                                                                               // sw r1, 2
+000111100                                                                                                               // add r15
 111100000                                                                                                               // set r1, 0
 001000010                                                                                                               // lw r0, 3
 000101100                                                                                                               // add y1
@@ -53,24 +45,15 @@ sra x1
 100101100
 100101010
 101101101 // mov r0, y2
-mov r1, i
-srl r2
-set r0, 8
-sub r1
-mov r0, y1
-sll r1
-mov r0, r2
-or y2
-mov r0, y1
-mov r1, i
-sra y1
 100101100                                                                                                               // mov r0, y1
 100110010                                                                                                               // mov r1, y2
 010000010                                                                                                               // sw r0, 3
 010100011                                                                                                               // sw r1, 4
+000111100                                                                                                               // add r15
 111000000                                                                                                               // set r0, 0
 111100000                                                                                                               // set r1, 0
 000101000                                                                                                               // add i
+000111100                                                                                                               // add r15
 100101010                                                                                                               // mov r1, i
 111001011                                                                                                               // set r0, 11
 011000010                                                                                                               // blts END:
@@ -102,17 +85,6 @@ sra y1
 100101100
 100101010
 101001001 // mov r0, y2
-mov r1, i
-srl r2
-set r0, 8
-sub r1
-mov r0, y1
-sll r1
-mov r0, r2
-or temp
-mov r0, y1
-mov r1, i
-sra r2
 100001100                                                                                                               // mov r0, temp
 100111010                                                                                                               // mov r1, x2
 000010100                                                                                                               // add x_new2
@@ -139,17 +111,6 @@ sra r2
 100011000
 100101010
 101001001 // mov r0, temp2
-mov r1, i
-srl r2
-set r0, 8
-sub r1
-mov r0, temp1
-sll r1
-mov r0, r2
-or temp
-mov r0, temp1
-mov r1, i
-sra r2
 100001100                                                                                                               // mov r0, temp
 100110010                                                                                                               // mov r1, y2
 000110000                                                                                                               // add y2
@@ -176,17 +137,6 @@ sra r2
 100001100
 100011010
 101001100 // mov r0, temp2
-mov r1, temp1
-sll r2
-set r0, 8
-sub r1
-mov r0, temp
-srl r1
-mov r0, r2
-or r2
-mov r0, temp
-mov r1, temp1
-sll temp
 100001100                                                                                                               // mov r0, temp
 100100110                                                                                                               // mov r1, t2
 000100100                                                                                                               // add t2
@@ -216,17 +166,6 @@ sll temp
 100011000
 100101010
 101001001 // mov r0, temp2
-mov r1, i
-srl r2
-set r0, 8
-sub r1
-mov r0, temp1
-sll r1
-mov r0, r2
-or temp
-mov r0, temp1
-mov r1, i
-sra r2
 100001100                                                                                                               // mov r0, temp
 100111010                                                                                                               // mov r1, x2
 000010100                                                                                                               // add x_new2
@@ -245,17 +184,6 @@ sra r2
 100110100
 100101010
 101001001 // mov r0, x2
-mov r1, i
-srl r2
-set r0, 8
-sub r1
-mov r0, x1
-sll r1
-mov r0, r2
-or temp
-mov r0, x1
-mov r1, i
-sra r2
 100001100                                                                                                               // mov r0, temp
 100110010                                                                                                               // mov r1, y2
 000110000                                                                                                               // add y2
@@ -282,17 +210,6 @@ sra r2
 100001100
 100011010
 101000000 // mov r0, temp2
-mov r1, temp1
-sll r2
-set r0, 8
-sub r1
-mov r0, temp
-srl r1
-mov r0, r2
-or r2
-mov r0, temp
-mov r1, temp1
-sll r0
 110000000                                                                                                               // neg r0
 111100001                                                                                                               // set r1, 1
 000011100                                                                                                               // add temp2
@@ -340,17 +257,6 @@ sll r0
 100111000
 100101010
 101111000 // mov r0, x1
-mov r1, i
-sll r2
-set r0, 8
-sub r1
-mov r0, x2
-srl r1
-mov r0, r2
-or x1
-mov r0, x2
-mov r1, i
-sll x2
 100110100                                                                                                               // mov r0, x1
 100111010                                                                                                               // mov r1, x2
 010000100                                                                                                               // sw r0, 5
@@ -367,18 +273,8 @@ sll x2
 100100100
 100101010
 101100100 // mov r0, t1
-mov r1, i
-sll r2
-set r0, 8
-sub r1
-mov r0, t2
-srl r1
-mov r0, r2
-or t1
-mov r0, t2
-mov r1, i
-sll t2
 100100000                                                                                                               // mov r0, t1
 100100110                                                                                                               // mov r1, t2
 010000110                                                                                                               // sw r0, 7
 010100111                                                                                                               // sw r1, 8
+110000011                                                                                                               // halt r0

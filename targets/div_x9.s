@@ -270,3 +270,5 @@ IF_EXIT:
     mov r1, quotient_LSW
     sw r0, QUOTIENT_RETURN_ADDR_MSW
     sw r1, QUOTIENT_RETURN_ADDR_LSW
+
+    halt r0

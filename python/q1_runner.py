@@ -21,7 +21,7 @@ class Debugger(Callback):
 
 def main():
     mem_default = [0] * 256
-    mem_default[1] = 0x05
+    mem_default[1] = 0x10
     mem_default[2] = 0x00
     mem_default[3] = 0x10
     mem_default[4] = 0x00
