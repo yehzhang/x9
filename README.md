@@ -43,32 +43,32 @@ Machine code of all instructions of a type has the same format.
 
 | Mnemonic     | Type         | RTL          | Usage        | Opcode       | Funct        |
 |--------------|--------------|--------------|--------------|--------------|--------------|
-| add          | R            | {cout, R[rd]} = R[0] + R[1] | Add rd       | 0            | 0            |
-| adc          | R            | {cout’, R[rd]} = R[0] + R[1] + cout | Adc rd       | 0            | 1            |
-| sub          | R            | R[rd] = R[0] - R[1] | Sub rd       | 0            | 2            |
-| lwr          | R            | R[rd] = Mem[R[0]] | Lwr rd       | 0            | 3            |
-| lw           | I            | R[rt] = Mem[lw\_LUT[imm]] | Lw rt, imm   | 1            | N/A          |
-| sw           | I            | Mem[sw\_LUT[imm]] = R[rt] | Sw rt, imm   | 2            | N/A          |
-| beq          | B            | if (R[0] == R[1]) pc = beq\_LUT[imm] | Beq imm      | 3            | 0            |
-| bne          | B            | if (R[0] != R[1]) pc = bne\_LUT[imm] | Bne imm      | 3            | 1            |
-| blts         | B            | if ((signed)R[0] \< (signed)R[1]) pc = bgt\_LUT[imm] | Blts imm     | 3            | 2            |
-| blt          | B            | if (R[0] \< R[1]) pc = blt\_LUT[imm] | Blt imm      | 3            | 3            |
-| mov          | M            | R[rt] = R[rs]      | Mov rt, rs   | 4            | N/A          |
-| sll          | R            | R[rd] = R[0] \<\< R[1] | Sll rd       | 5            | 0            |
-| sra          | R            | R[rd] = (signed)R[0] \>\> R[1] | Sra rd       | 5            | 1            |
-| srl          | R            | R[rd] = R[0] \>\> R[1]    | Srl rd       | 5            | 2            |
+| add          | R            | {cout, R[rd]} = R[0] + R[1] | add rd       | 0            | 0            |
+| adc          | R            | {cout’, R[rd]} = R[0] + R[1] + cout | adc rd       | 0            | 1            |
+| sub          | R            | R[rd] = R[0] - R[1] | sub rd       | 0            | 2            |
+| lwr          | R            | R[rd] = Mem[R[0]] | lwr rd       | 0            | 3            |
+| lw           | I            | R[rt] = Mem[lw\_LUT[imm]] | lw rt, imm   | 1            | N/A          |
+| sw           | I            | Mem[sw\_LUT[imm]] = R[rt] | sw rt, imm   | 2            | N/A          |
+| beq          | B            | if (R[0] == R[1]) pc = beq\_LUT[imm] | beq imm      | 3            | 0            |
+| bne          | B            | if (R[0] != R[1]) pc = bne\_LUT[imm] | bne imm      | 3            | 1            |
+| blts         | B            | if ((signed)R[0] \< (signed)R[1]) pc = bgt\_LUT[imm] | blts imm     | 3            | 2            |
+| blt          | B            | if (R[0] \< R[1]) pc = blt\_LUT[imm] | blt imm      | 3            | 3            |
+| mov          | M            | R[rt] = R[rs]      | mov rt, rs   | 4            | N/A          |
+| sll          | R            | R[rd] = R[0] \<\< R[1] | sll rd       | 5            | 0            |
+| sra          | R            | R[rd] = (signed)R[0] \>\> R[1] | sra rd       | 5            | 1            |
+| srl          | R            | R[rd] = R[0] \>\> R[1]    | srl rd       | 5            | 2            |
 | N/A          | N/A          | N/A          | N/A          | 5            | 3            |
-| neg          | R            | R[rd] = \~R[0]     | Neg rd       | 6            | 0            |
-| and          | R            | R[rd] = R[0] & R[1] | And rd       | 6            | 1            |
-| or           | R            | R[rd] = R[0] \| R[1] | Or rd        | 6            | 2            |
+| neg          | R            | R[rd] = \~R[0]     | neg rd       | 6            | 0            |
+| and          | R            | R[rd] = R[0] & R[1] | and rd       | 6            | 1            |
+| or           | R            | R[rd] = R[0] \| r[1] | Or rd        | 6            | 2            |
 | halt         | R            | \*magic\*    | halt         | 6            | 3            |
-| set          | I            | R[rt] = imm  | Set rgret imm    | 7            | N/A          |
+| set          | I            | R[rt] = imm  | set rgret imm    | 7            | N/A          |
 
 ### Pseudo instructions
 | Mnemonic     | Type         | RTL          | Usage        | Opcode       | Funct        |
 |--------------|--------------|--------------|--------------|--------------|--------------|
-| sllc         | N/A          | N/A          | Sllc reg\_m, reg\_l, shamt, reg\_mr, reg\_lr | N/A          | N/A          |
-| srlc         | N/A          | N/A          | Srlc reg\_m, reg\_l, shamt, reg\_mr, reg\_lr | N/A          | N/A          |
+| sllc         | N/A          | N/A          | sllc reg\_m, reg\_l, shamt, reg\_mr, reg\_lr | N/A          | N/A          |
+| srlc         | N/A          | N/A          | srlc reg\_m, reg\_l, shamt, reg\_mr, reg\_lr | N/A          | N/A          |
 
 
 ### Registers
