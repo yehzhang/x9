@@ -60,7 +60,7 @@ Machine code of all instructions of a type has the same format.
 | N/A          | N/A          | N/A          | N/A          | 5            | 3            |
 | neg          | R            | R[rd] = \~R[0]     | Neg rd       | 6            | 0            |
 | and          | R            | R[rd] = R[0] & R[1] | And rd       | 6            | 1            |
-| or           | R            | R[rd] = R[0] | R[1] | Or rd        | 6            | 2            |
+| or           | R            | R[rd] = R[0] \| R[1] | Or rd        | 6            | 2            |
 | halt         | R            | \*magic\*    | halt         | 6            | 3            |
 | set          | I            | R[rt] = imm  | Set rgret imm    | 7            | N/A          |
 
